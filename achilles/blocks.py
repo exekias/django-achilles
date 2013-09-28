@@ -1,4 +1,4 @@
-from django.template import RequestContext
+from django.template import Context
 from django.template.loader import get_template
 from django.utils.log import getLogger
 
@@ -11,6 +11,12 @@ class Library(object):
     """
     def __init__(self):
         self.blocks = {}
+
+    def get(self, name, context=None, *args, **kwargs):
+        """
+        Return block instance for the given name
+        """
+        return self.blocks[name](context=context, *args, **kwargs)
 
     def block(self, name=None, compile_function=None):
         if name is None:
@@ -46,7 +52,8 @@ class Library(object):
                 def get_context_data(self, *args, **kwargs):
                     context = super(SimpleBlock,
                                     self).get_context_data(*args, **kwargs)
-                    return context.update(func(self.request, *args, **kwargs))
+                    context.update(func(self.context, *args, **kwargs))
+                    return context
 
             block_name = (
                 name or
@@ -55,6 +62,9 @@ class Library(object):
             self.block(block_name, SimpleBlock)
             return func
         return dec
+
+# Global register
+register = Library()
 
 
 class ZBlock(object):
@@ -66,8 +76,8 @@ class ZBlock(object):
     # Should be defined
     template_name = None
 
-    def __init__(self, request, *args, **kwargs):
-        self.request = request
+    def __init__(self, context=None, *args, **kwargs):
+        self.context = context or Context()
         self.args = args
         self.kwargs = kwargs
 
@@ -76,4 +86,4 @@ class ZBlock(object):
         return t.render(self.get_context_data(*self.args, **self.kwargs))
 
     def get_context_data(self, *args, **kwargs):
-        return RequestContext(self.request, {})
+        return self.context

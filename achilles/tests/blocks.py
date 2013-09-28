@@ -1,41 +1,54 @@
-from unittest import TestCase
+import os
+
+from django.test import TestCase
+from django.test.utils import override_settings
+from django.template import Template, Context
+
 from achilles import blocks
 
 
+@override_settings(
+    TEMPLATE_DIRS=(os.path.join(os.path.dirname(__file__), 'templates/'),),
+    TEMPLATE_LOADERS=('django.template.loaders.filesystem.Loader',),
+)
 class BlocksTests(TestCase):
 
-    def setUp(self):
-        self.register = blocks.Library()
-
-    def test_register_initially_empty(self):
-        self.assertEqual(len(self.register.blocks), 0)
-
     def test_register_block1(self):
-        @self.register.block()
+        @blocks.register.block()
         class MyBlock(blocks.ZBlock):
             template_name = 'template'
 
-        self.assertEqual(self.register.blocks['MyBlock'], MyBlock)
+        self.assertEqual(blocks.register.get('MyBlock'), MyBlock)
 
     def test_register_block2(self):
-        @self.register.block
+        @blocks.register.block
         class MyBlock(blocks.ZBlock):
             template_name = 'template'
 
-        self.assertEqual(self.register.blocks['MyBlock'], MyBlock)
+        self.assertEqual(blocks.register.get('MyBlock'), MyBlock)
 
     def test_register_block3(self):
-        @self.register.block('new_name')
+        @blocks.register.block('new_name')
         class MyBlock(blocks.ZBlock):
             template_name = 'template'
 
-        self.assertNotIn(MyBlock, self.register.blocks)
-        self.assertEqual(self.register.blocks['new_name'], MyBlock)
+        self.assertNotIn(MyBlock, blocks.register.blocks)
+        self.assertEqual(blocks.register.get('new_name'), MyBlock)
 
     def test_register_simple_block(self):
-        @self.register.simple_block('template')
-        def foo(request):
+        @blocks.register.simple_block('template')
+        def foo(context):
             return {}
 
-        self.assertEqual(len(self.register.blocks), 1)
-        self.assertIn('foo', self.register.blocks)
+        self.assertIn('foo', blocks.register.blocks)
+
+    def test_render_block(self):
+        @blocks.register.simple_block('block_template.html')
+        def message(request):
+            return {'message': 'foo'}
+
+        out = Template(
+            "{% load ablock %}"
+            "{% ablock 'message' %}").render(Context())
+
+        self.assertEqual(out, '<div data-ablock="name">foo\n</div>')
