@@ -15,25 +15,25 @@ class BlocksTests(TestCase):
 
     def test_register_block1(self):
         @blocks.register.block()
-        class MyBlock(blocks.ZBlock):
+        class MyBlock(blocks.Block):
             template_name = 'template'
 
-        self.assertEqual(blocks.register.get('MyBlock'), MyBlock)
+        self.assertIsInstance(blocks.register.get('MyBlock'), MyBlock)
 
     def test_register_block2(self):
         @blocks.register.block
-        class MyBlock(blocks.ZBlock):
+        class MyBlock(blocks.Block):
             template_name = 'template'
 
-        self.assertEqual(blocks.register.get('MyBlock'), MyBlock)
+        self.assertIsInstance(blocks.register.get('MyBlock'), MyBlock)
 
     def test_register_block3(self):
         @blocks.register.block('new_name')
-        class MyBlock(blocks.ZBlock):
+        class MyBlock(blocks.Block):
             template_name = 'template'
 
         self.assertNotIn(MyBlock, blocks.register.blocks)
-        self.assertEqual(blocks.register.get('new_name'), MyBlock)
+        self.assertIsInstance(blocks.register.get('new_name'), MyBlock)
 
     def test_register_simple_block(self):
         @blocks.register.simple_block('template')

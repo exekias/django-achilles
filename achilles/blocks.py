@@ -55,7 +55,7 @@ class Library(object):
 
     def simple_block(self, template, name=None):
         def dec(func):
-            class SimpleBlock(ZBlock):
+            class SimpleBlock(Block):
                 template_name = template
 
                 def get_context_data(self, *args, **kwargs):
@@ -76,7 +76,7 @@ class Library(object):
 register = Library()
 
 
-class ZBlock(object):
+class Block(object):
     """
     Block section, defines a block in the page. template_name instance field
     should be defined, so render method will use it in conjunction with
