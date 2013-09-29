@@ -1,6 +1,9 @@
+from django.conf import settings
 from django.template import Context
 from django.template.loader import get_template
 from django.utils.log import getLogger
+from importlib import import_module
+
 
 logger = getLogger(__name__)
 
@@ -16,6 +19,12 @@ class Library(object):
         """
         Return block instance for the given name
         """
+        # make sure all blocks are loaded
+        for app in settings.INSTALLED_APPS:
+            try:
+                import_module(app + '.blocks')
+            except:
+                pass
         return self.blocks[name](context=context, *args, **kwargs)
 
     def block(self, name=None, compile_function=None):
