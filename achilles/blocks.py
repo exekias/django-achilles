@@ -4,7 +4,6 @@ from django.template.loader import get_template
 from django.utils.log import getLogger
 from importlib import import_module
 
-
 logger = getLogger(__name__)
 
 
@@ -25,6 +24,10 @@ class Library(object):
                 import_module(app + '.blocks')
             except:
                 pass
+
+        if name not in self.blocks:
+            raise KeyError("'%s' block doesn't exists" % name)
+
         return self.blocks[name](context=context, *args, **kwargs)
 
     def block(self, name=None, compile_function=None):
