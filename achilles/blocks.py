@@ -28,7 +28,7 @@ class Library(object):
         if name not in self.blocks:
             raise KeyError("'%s' block doesn't exists" % name)
 
-        return self.blocks[name](context=context, *args, **kwargs)
+        return self.blocks[name](context, *args, **kwargs)
 
     def block(self, name=None, compile_function=None):
         if name is None:
@@ -88,7 +88,7 @@ class Block(object):
     # Should be defined
     template_name = None
 
-    def __init__(self, context=None, *args, **kwargs):
+    def __init__(self, context, *args, **kwargs):
         self.context = context or Context()
         self.args = args
         self.kwargs = kwargs
