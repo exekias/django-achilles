@@ -13,37 +13,55 @@ from achilles import blocks
 )
 class BlocksTests(TestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        cls.register = blocks.Library()
+
     def test_register_block1(self):
-        @blocks.register.block()
+        @self.register.block()
         class MyBlock(blocks.Block):
             template_name = 'template'
 
-        self.assertIsInstance(blocks.register.get('MyBlock'), MyBlock)
+        self.assertIsInstance(self.register.get('MyBlock'), MyBlock)
 
     def test_register_block2(self):
-        @blocks.register.block
+        @self.register.block
         class MyBlock(blocks.Block):
             template_name = 'template'
 
-        self.assertIsInstance(blocks.register.get('MyBlock'), MyBlock)
+        self.assertIsInstance(self.register.get('MyBlock'), MyBlock)
 
     def test_register_block3(self):
-        @blocks.register.block('new_name')
+        @self.register.block('new_name')
         class MyBlock(blocks.Block):
             template_name = 'template'
 
-        self.assertNotIn(MyBlock, blocks.register.blocks)
-        self.assertIsInstance(blocks.register.get('new_name'), MyBlock)
+        self.assertIsInstance(self.register.get('new_name'), MyBlock)
 
     def test_register_simple_block(self):
-        @blocks.register.simple_block('template')
+        @self.register.simple_block('template')
         def foo(context):
             return {}
 
-        self.assertIn('foo', blocks.register.blocks)
+        self.assertIsInstance(self.register.get('foo'), blocks.Block)
+
+    def test_block_get(self):
+        @self.register.simple_block('block_template.html')
+        def message(request):
+            return {'message': 'foo'}
+
+        self.assertIsInstance(blocks.get('message'), blocks.Block)
+
+    def test_block_namespaces(self):
+        register = blocks.Library('foo')
+        @register.simple_block('block_template.html')
+        def message(request):
+            return {'message': 'foo'}
+
+        self.assertIsInstance(blocks.get('foo:message'), blocks.Block)
 
     def test_render_block(self):
-        @blocks.register.simple_block('block_template.html')
+        @self.register.simple_block('block_template.html')
         def message(request):
             return {'message': 'foo'}
 

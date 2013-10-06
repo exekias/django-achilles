@@ -4,57 +4,37 @@ from django.template.loader import get_template
 from django.utils.log import getLogger
 from importlib import import_module
 
+from .common import BaseLibrary
+
 logger = getLogger(__name__)
 
 
-class Library(object):
+class Library(BaseLibrary):
     """
     Blocks register library
     """
-    def __init__(self):
-        self.blocks = {}
+    # Static field to hold all registered libraries
+    registers = {}
+
+    def __init__(self, namespace=None):
+        if namespace in Library.registers:
+            raise ValueError("A block namespace with name "
+                             "'%s' is already registered" % namespace)
+
+        Library.registers[namespace] = self
+        BaseLibrary.__init__(self)
 
     def get(self, name, context=None, *args, **kwargs):
         """
         Return block instance for the given name
         """
-        # make sure all blocks are loaded
-        for app in settings.INSTALLED_APPS:
-            try:
-                import_module(app + '.blocks')
-            except:
-                pass
-
-        if name not in self.blocks:
+        if name not in self.items:
             raise KeyError("'%s' block doesn't exists" % name)
 
-        return self.blocks[name](context, *args, **kwargs)
+        return BaseLibrary.get(self, name)(context, *args, **kwargs)
 
-    def block(self, name=None, compile_function=None):
-        if name is None:
-            # @register.block()
-            return self.block_function
-        elif name is not None and compile_function is None:
-            if callable(name):
-                # @register.block
-                return self.block_function(name)
-            else:
-                # @register.block('somename') @register.block(name='somename')
-                def dec(func):
-                    return self.block(name, func)
-                return dec
-        elif name is not None and compile_function is not None:
-            # register.block('somename', somefunc)
-            self.blocks[name] = compile_function
-            return compile_function
-        else:
-            raise ValueError(
-                "Unsupported arguments to "
-                "Library.block: (%r, %r)", (name, compile_function))
-
-    def block_function(self, func):
-        self.blocks[getattr(func, "_decorated_function", func).__name__] = func
-        return func
+    # Provide block register
+    block = BaseLibrary._register
 
     def simple_block(self, template, name=None):
         def dec(func):
@@ -75,8 +55,33 @@ class Library(object):
             return func
         return dec
 
-# Global register
-register = Library()
+
+def get(name, context=None, *args, **kwargs):
+    """
+    Return block instance for the given name
+    """
+    # make sure all blocks are loaded
+    for app in settings.INSTALLED_APPS:
+        try:
+            import_module(app + '.blocks')
+        except:
+            pass
+
+    if ':' in name:
+        namespace, name = name.split(':', 1)
+    else:
+        namespace = None
+
+    if namespace not in Library.registers:
+        raise KeyError("'%s' namespace doesn't exists for blocks" % namespace)
+
+    register = Library.registers[namespace]
+    try:
+        return register.get(name, context, *args, **kwargs)
+    except KeyError:
+        pass
+
+    raise KeyError("'%s' block doesn't exists" % name)
 
 
 class Block(object):
