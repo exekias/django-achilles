@@ -11,5 +11,6 @@ setup(
     author='Carlos Pérez-Aradros Herce',
     author_email='cperez@zentyal.com',
     description='Django AJAX Framework',
-    packages=find_packages(),
+    packages=find_packages(exclude=['demo', '*.tests']),
+    install_requires=[line for line in open('requirements.txt')],
 )
