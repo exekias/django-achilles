@@ -21,7 +21,7 @@ class ActionsTests(TestCase):
         def action(request):
             return 10
 
-        a = self.register.get('action')
+        a = actions.get('action')
         self.assertEqual(a, action)
         self.assertEqual(10, a(self.request).run())
 
@@ -31,7 +31,7 @@ class ActionsTests(TestCase):
             def run(self):
                 return 10
 
-        a = self.register.get('classaction')
+        a = actions.get('classaction')
         self.assertEqual(a, AnAction)
         self.assertEqual(10, a(self.request).run())
 
