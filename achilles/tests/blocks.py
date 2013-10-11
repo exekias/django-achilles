@@ -17,64 +17,26 @@ class BlocksTests(TestCase):
     def setUpClass(cls):
         cls.register = blocks.Library()
 
-    def test_register_block1(self):
-        @self.register.block()
-        class MyBlock(blocks.Block):
-            template_name = 'template'
-
-        self.assertIsInstance(self.register.get('MyBlock'), MyBlock)
-
-    def test_register_block2(self):
-        @self.register.block
-        class MyBlock(blocks.Block):
-            template_name = 'template'
-
-        self.assertIsInstance(self.register.get('MyBlock'), MyBlock)
-
-    def test_register_block3(self):
-        @self.register.block('new_name')
-        class MyBlock(blocks.Block):
-            template_name = 'template'
-
-        self.assertIsInstance(self.register.get('new_name'), MyBlock)
-
-    def test_register_simple_block(self):
-        @self.register.simple_block('template')
-        def foo(context):
-            return {}
-
-        self.assertIsInstance(self.register.get('foo'), blocks.Block)
-
-    def test_block_get(self):
-        @self.register.simple_block('template')
+    def test_render_function_block(self):
+        @self.register.block(template_name='block_template.html')
         def message(request):
             return {'message': 'foo'}
 
-        self.assertIsInstance(blocks.get('message'), blocks.Block)
+        out = Template(
+            "{% load ablock %}"
+            "{% ablock 'message' %}").render(Context())
 
-    def test_block_namespaces(self):
-        register = blocks.Library('foo')
+        self.assertEqual(out, '<div data-ablock="name">foo\n</div>')
 
-        @register.simple_block('template')
-        def message(request):
-            return {'message': 'foo'}
+    def test_render_class_block(self):
+        @self.register.block('message')
+        class Message(blocks.Block):
+            template_name = 'block_template.html'
 
-        self.assertIsInstance(blocks.get('foo:message'), blocks.Block)
-
-    def test_block_repeated_namespaces(self):
-        register1 = blocks.Library('repeated')
-        self.assertRaises(ValueError, blocks.Library, 'repeated')
-
-    def test_unknown_namepsace(self):
-        self.assertRaises(KeyError, blocks.get, 'non-existent:namespace')
-
-    def test_unknown_block(self):
-        self.assertRaises(KeyError, blocks.get, 'non-existent')
-
-    def test_render_block(self):
-        @self.register.simple_block('block_template.html')
-        def message(request):
-            return {'message': 'foo'}
+            def get_context_data(self, *args, **kwargs):
+                context = super(Message, self).get_context_data(*args, **kwargs)
+                context.update({'message': 'foo'})
+                return context
 
         out = Template(
             "{% load ablock %}"

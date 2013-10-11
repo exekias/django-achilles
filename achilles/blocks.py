@@ -13,47 +13,32 @@ class Library(BaseLibrary):
     """
     Blocks register library
     """
-    # Static field to hold all registered libraries
     registers = {}
 
     def __init__(self, namespace=None):
-        if namespace in Library.registers:
-            raise ValueError("A block namespace with name "
-                             "'%s' is already registered" % namespace)
+        BaseLibrary.__init__(self, Block, namespace)
 
-        Library.registers[namespace] = self
-        BaseLibrary.__init__(self)
-
-    def get(self, name, context=None, *args, **kwargs):
+    def block(self, name=None, template_name=None):
         """
-        Return block instance for the given name
+        Block register method
         """
-        if name not in self.items:
-            raise KeyError("'%s' block doesn't exists" % name)
+        if not template_name:
+            return self.register(name)
 
-        return BaseLibrary.get(self, name)(context, *args, **kwargs)
-
-    # Provide block register
-    block = BaseLibrary._register
-
-    def simple_block(self, template, name=None):
-        def dec(func):
-            class SimpleBlock(Block):
-                template_name = template
-
-                def get_context_data(self, *args, **kwargs):
-                    context = super(SimpleBlock,
-                                    self).get_context_data(*args, **kwargs)
-                    context.update(func(self.context, *args, **kwargs))
-                    return context
-
-            block_name = (
-                name or
-                getattr(func, '_decorated_function', func).__name__)
-
-            self.block(block_name, SimpleBlock)
-            return func
+        def dec(name):
+            res = self.register(name)
+            if template_name:
+                res.template_name = template_name
+            return res
         return dec
+
+    def create_class(self, func):
+        class B(Block):
+            def get_context_data(self, *args, **kwargs):
+                context = super(B, self).get_context_data(*args, **kwargs)
+                context.update(func(self.context, *args, **kwargs))
+                return context
+        return B
 
 
 def get(name, context=None, *args, **kwargs):
@@ -67,21 +52,7 @@ def get(name, context=None, *args, **kwargs):
         except:
             pass
 
-    if ':' in name:
-        namespace, name = name.split(':', 1)
-    else:
-        namespace = None
-
-    if namespace not in Library.registers:
-        raise KeyError("'%s' namespace doesn't exists for blocks" % namespace)
-
-    register = Library.registers[namespace]
-    try:
-        return register.get(name, context, *args, **kwargs)
-    except KeyError:
-        pass
-
-    raise KeyError("'%s' block doesn't exists" % name)
+    return Library.get_global(name)(context, *args, **kwargs)
 
 
 class Block(object):
