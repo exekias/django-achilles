@@ -5,6 +5,7 @@ from achilles.common import BaseLibrary
 class TestBase(object):
     pass
 
+
 class Library(BaseLibrary):
 
     def __init__(self, namespace=None):
@@ -22,31 +23,36 @@ class LibraryTests(TestCase):
 
     def test_register_class1(self):
         @self.register.register()
-        class Test(TestBase): pass
+        class Test(TestBase):
+            pass
 
         self.assertIs(self.register.get('Test'), Test)
 
     def test_register_class2(self):
         @self.register.register
-        class Test(TestBase): pass
+        class Test(TestBase):
+            pass
 
         self.assertIs(self.register.get('Test'), Test)
 
     def test_register_class_with_name(self):
         @self.register.register(name='foo')
-        class Test(TestBase): pass
+        class Test(TestBase):
+            pass
 
         self.assertIs(self.register.get('foo'), Test)
 
     def test_register_function1(self):
         @self.register.register
-        def test(): pass
+        def test():
+            pass
 
         self.assertIs(self.register.get('test'), test)
 
     def test_register_function2(self):
         @self.register.register()
-        def test(): pass
+        def test():
+            pass
 
         self.assertIs(self.register.get('test'), test)
 
@@ -55,7 +61,8 @@ class LibraryTests(TestCase):
 
     def test_register_get_global(self):
         @self.register.register
-        def test(): pass
+        def test():
+            pass
 
         self.assertIs(Library.get_global('test'), test)
 
@@ -63,7 +70,8 @@ class LibraryTests(TestCase):
         register = Library('namespace')
 
         @register.register
-        def test(): pass
+        def test():
+            pass
 
         self.assertIs(Library.get_global('namespace:test'), test)
 

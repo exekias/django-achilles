@@ -34,7 +34,8 @@ class BlocksTests(TestCase):
             template_name = 'block_template.html'
 
             def get_context_data(self, *args, **kwargs):
-                context = super(Message, self).get_context_data(*args, **kwargs)
+                context = super(Message, self).get_context_data(*args,
+                                                                **kwargs)
                 context.update({'message': 'foo'})
                 return context
 

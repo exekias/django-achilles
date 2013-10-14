@@ -34,4 +34,3 @@ class ActionsTests(TestCase):
         a = actions.get('classaction')
         self.assertEqual(a, AnAction)
         self.assertEqual(10, a(self.request).run())
-
