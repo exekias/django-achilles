@@ -23,7 +23,7 @@ class BlocksTests(TestCase):
             return {'message': 'foo'}
 
         out = Template(
-            "{% load ablock %}"
+            "{% load achilles %}"
             "{% ablock 'message' %}").render(Context())
 
         self.assertEqual(out, '<div data-ablock="name">foo\n</div>')
@@ -40,7 +40,7 @@ class BlocksTests(TestCase):
                 return context
 
         out = Template(
-            "{% load ablock %}"
+            "{% load achilles %}"
             "{% ablock 'message' %}").render(Context())
 
         self.assertEqual(out, '<div data-ablock="name">foo\n</div>')

@@ -1,9 +1,15 @@
 from django import template
 from django.template.loader_tags import IncludeNode
 
-from achilles import blocks
+from .. import blocks
+
 
 register = template.Library()
+
+
+@register.simple_tag
+def achilles_js():
+    return '<script src="/static/js/achilles.js"></script>'
 
 
 @register.simple_tag(takes_context=True)
