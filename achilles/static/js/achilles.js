@@ -22,7 +22,7 @@
 
         // Init achilles instance, set the server endpoint URL
         init: function(endpoint) {
-            this.endpoint = endpoint;
+            this.transport = new JSONTransport(endpoint);
             return this;
         },
 
@@ -36,6 +36,51 @@
     };
 
     achilles.fn.init.prototype = achilles.fn;
+
+
+    /* JSON TRANSPORT */
+    /* Default messages transport, using JQuery.ajax */
+    function JSONTransport(endpoint) {
+        this.endpoint = endpoint;
+    }
+
+    JSONTransport.fn = JSONTransport.prototype = {
+        // Send the given message to the server
+        send: function(msg) {
+            return $.ajax({
+                url: this.endpoint,
+                crossDomain: false,
+                type: 'POST',
+                beforeSend: this.setCSRFHeader,
+                data: msg,
+            });
+        },
+
+        setCSRFHeader: function(xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/.test(settings.type)) {
+                var csrftoken = getCookie('csrftoken');
+                alert(csrftoken);
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+    };
+
+    // getCookie helper
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 
 
 
