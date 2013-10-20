@@ -116,6 +116,26 @@
     achilles.fn.registerController('blocks', BlockController);
 
 
+
+    /* ACTIONS */
+
+    ActionController = {
+
+        // Controller process function
+        process: function(data) {
+            for (a in data) {
+            }
+        },
+
+    };
+
+    // Expose actions as part of achilles api
+    achilles.fn.actions = ActionController;
+
+    // Register the response controller
+    achilles.fn.registerController('actions', BlockController);
+
+
     // Expose achilles
     window.achilles = achilles;
 })(window);
