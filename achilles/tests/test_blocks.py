@@ -26,7 +26,7 @@ class BlocksTests(TestCase):
             "{% load achilles %}"
             "{% ablock 'message' %}").render(Context())
 
-        self.assertEqual(out, '<div data-ablock="name">foo\n</div>')
+        self.assertEqual(out, '<div data-ablock="message">foo\n</div>')
 
     def test_render_class_block(self):
         @self.register.block('message')
@@ -43,4 +43,4 @@ class BlocksTests(TestCase):
             "{% load achilles %}"
             "{% ablock 'message' %}").render(Context())
 
-        self.assertEqual(out, '<div data-ablock="name">foo\n</div>')
+        self.assertEqual(out, '<div data-ablock="message">foo\n</div>')
