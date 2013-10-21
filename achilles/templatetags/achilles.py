@@ -1,7 +1,6 @@
 from django import template
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.template.loader_tags import IncludeNode
 
 from .. import blocks
 

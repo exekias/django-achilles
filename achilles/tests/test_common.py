@@ -76,7 +76,7 @@ class LibraryTests(TestCase):
         self.assertIs(Library.get_global('namespace:test'), test)
 
     def test_register_duplicated_namespaces(self):
-        register = Library('repeated')
+        Library('repeated')
         self.assertRaises(ValueError, Library, 'repeated')
 
     def test_register_unknown_namespace(self):
