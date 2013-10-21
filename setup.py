@@ -18,6 +18,7 @@ setup(
     packages=find_packages(exclude=['demo', '*.tests']),
     include_package_data=True,
     install_requires=[r.strip() for r in dump('requirements.txt')],
+    setup_requires=[r.strip() for r in dump('requirements-dev.txt')],
     zip_safe=False,
     license='Apache License (2.0)',
     classifiers=[
