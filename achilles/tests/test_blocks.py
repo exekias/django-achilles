@@ -19,13 +19,24 @@ class BlocksTests(TestCase):
 
     def test_render_function_block(self):
         @self.register.block(template_name='block_template.html')
-        def message(request):
+        def message():
             return {'message': 'foo'}
 
         out = Template(
             "{% load achilles %}"
             "{% ablock 'message' %}").render(Context())
 
+        self.assertEqual(out, '<div data-ablock="message">foo\n</div>')
+
+    def test_render_function_block_with_context(self):
+        @self.register.block(template_name='block_template.html',
+                             takes_context=True)
+        def message(context):
+            return {'message': 'foo'}
+
+        out = Template(
+            "{% load achilles %}"
+            "{% ablock 'message' %}").render(Context())
         self.assertEqual(out, '<div data-ablock="message">foo\n</div>')
 
     def test_render_class_block(self):

@@ -2,7 +2,7 @@ from django.conf import settings
 from django.utils.log import getLogger
 from importlib import import_module
 
-from .common import BaseLibrary
+from achilles.common import BaseLibrary
 
 logger = getLogger(__name__)
 

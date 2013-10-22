@@ -4,7 +4,7 @@ from django.template.loader import get_template
 from django.utils.log import getLogger
 from importlib import import_module
 
-from .common import BaseLibrary
+from achilles.common import BaseLibrary
 
 logger = getLogger(__name__)
 
@@ -18,7 +18,7 @@ class Library(BaseLibrary):
     def __init__(self, namespace=None):
         BaseLibrary.__init__(self, Block, namespace)
 
-    def block(self, name=None, template_name=None):
+    def block(self, name=None, template_name=None, takes_context=False):
         """
         Block register method
         """
@@ -29,6 +29,7 @@ class Library(BaseLibrary):
             res = self.register(name)
             if template_name:
                 res.template_name = template_name
+                res.takes_context = takes_context
             return res
         return dec
 
@@ -36,7 +37,11 @@ class Library(BaseLibrary):
         class B(Block):
             def get_context_data(self, *args, **kwargs):
                 context = super(B, self).get_context_data(*args, **kwargs)
-                context.update(func(self.context, *args, **kwargs))
+                if self.takes_context:
+                    res = func(self.context, *args, **kwargs)
+                else:
+                    res = func(*args, **kwargs)
+                context.update(res)
                 return context
         return B
 
