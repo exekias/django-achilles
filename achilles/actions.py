@@ -24,7 +24,7 @@ class Library(BaseLibrary):
         return A
 
 
-def get(name):
+def get(name, request, *args, **kwargs):
     """
     Return action function for the given name
     """
@@ -35,7 +35,7 @@ def get(name):
         except:
             pass
 
-    return Library.get_global(name)
+    return Library.get_global(name)(request, *args, **kwargs)
 
 
 class Action(object):
