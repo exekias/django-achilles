@@ -9,7 +9,8 @@ env:
     - DJANGO=1.5.4
 install:
   - pip install -q Django==$DJANGO --use-mirrors
-script:
+before_script:
   - make pep8
   - make pyflakes
+script:
   - make test
