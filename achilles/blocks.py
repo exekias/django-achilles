@@ -2,9 +2,12 @@ from django.conf import settings
 from django.template import Context
 from django.template.loader import get_template
 from django.utils.log import getLogger
+
+from inspect import isclass
 from importlib import import_module
 
-from achilles.common import BaseLibrary
+from achilles.common import BaseLibrary, achilles_from_request
+from achilles.actions import Library as ActionsLibrary
 
 logger = getLogger(__name__)
 
@@ -16,7 +19,19 @@ class Library(BaseLibrary):
     registers = {}
 
     def __init__(self, namespace=None):
-        BaseLibrary.__init__(self, Block, namespace)
+        BaseLibrary.__init__(self, namespace)
+
+    def register(self, name=None):
+        if name is None:
+            return BaseLibrary.register(self, name)
+        elif isclass(name) and issubclass(name, Block):
+            return self._register(name)
+        elif callable(name):
+            res = self.create_class(name)
+            res.__name__ = getattr(name, '_decorated_function', name).__name__
+            return self._register(res)
+        else:
+            return BaseLibrary.register(self, name)
 
     def block(self, name=None, template_name=None, takes_context=False):
         """
@@ -46,7 +61,7 @@ class Library(BaseLibrary):
         return B
 
 
-def get(name, context=None, *args, **kwargs):
+def get(name, context=None):
     """
     Return block instance for the given name
     """
@@ -57,7 +72,7 @@ def get(name, context=None, *args, **kwargs):
         except:
             pass
 
-    return Library.get_global(name)(context, *args, **kwargs)
+    return Library.get_global(name)(context)
 
 
 class Block(object):
@@ -69,14 +84,33 @@ class Block(object):
     # Should be defined
     template_name = None
 
-    def __init__(self, context, *args, **kwargs):
+    def __init__(self, context):
         self.context = context or Context()
-        self.args = args
-        self.kwargs = kwargs
 
-    def render(self):
+    def render(self, *args, **kwargs):
         t = get_template(self.template_name)
-        return t.render(self.get_context_data(*self.args, **self.kwargs))
+        return t.render(self.get_context_data(*args, **kwargs))
 
     def get_context_data(self, *args, **kwargs):
         return self.context
+
+
+register = ActionsLibrary('blocks')
+
+
+@register.action
+def update(request, name, *args, **kwargs):
+    """
+    Update a block (with optional block params)
+    """
+    block = get(name)
+    blocks = achilles_from_request(request, 'blocks', [])
+    blocks.append({
+        'name': name,
+        'args': args,
+        'kwargs': kwargs,
+        'data': block.render(*args, **kwargs),
+    })
+
+def render_blocks(request):
+    return achilles_from_request(request, 'blocks', [])

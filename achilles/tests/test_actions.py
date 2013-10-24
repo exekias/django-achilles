@@ -19,16 +19,6 @@ class ActionsTests(TestCase):
         def action(request):
             return 10
 
-        a = actions.get('action', self.request)
-        self.assertIsInstance(a, action)
-        self.assertEqual(10, a.run())
-
-    def test_run_class_action(self):
-        @self.register.action('classaction')
-        class AnAction(actions.Action):
-            def run(self):
-                return 10
-
-        a = actions.get('classaction', self.request)
-        self.assertIsInstance(a, AnAction)
-        self.assertEqual(10, a.run())
+        a = actions.get('action')
+        self.assertEqual(a, action)
+        self.assertEqual(10, a(self.request))

@@ -1,14 +1,31 @@
-from inspect import isclass
+
+
+def achilles_from_request(request, key=None, default=None):
+    """
+    Return achilles response dict. Achilles stores here data related
+    to the request, in order to prepare a reply.
+
+    If key value is given, this function will return that key (if exists)
+    from achilles response dict.
+
+    If default is given it will be asigned and returned in it does not exists
+    """
+    if not hasattr(request, '_achilles'):
+        request._achilles = {}
+
+    if key is None:
+        return request._achilles
+
+    if key not in request._achilles and default is not None:
+        request._achilles[key] = default
+
+    return request._achilles[key]
 
 
 class BaseLibrary(object):
     """
     Base register library, provides decorator functions to register
-    any of the following items:
-
-        * A subclass of base_class
-        * A function that will be converted to base_class trough
-          create_class method
+    items of any type.
 
     All items are registered using a name to uniquely identify them
 
@@ -18,7 +35,7 @@ class BaseLibrary(object):
     """
     namespace_separator = ':'
 
-    def __init__(self, base_class, namespace):
+    def __init__(self, namespace):
         # global namespaced register
         if not hasattr(type(self), 'registers'):
             type(self).registers = {}
@@ -29,7 +46,6 @@ class BaseLibrary(object):
                              "'%s' is already registered" % namespace)
 
         type(self).registers[namespace] = self
-        self.base_class = base_class
         self.items = {}
 
     def get(self, name):
@@ -55,25 +71,17 @@ class BaseLibrary(object):
 
     def register(self, name=None):
         if name is None:
-            return self._register_class
-        elif isclass(name) and issubclass(name, self.base_class):
-            return self._register_class(name)
+            return self._register
         elif callable(name):
-            res = self.create_class(name)
-            res.__name__ = getattr(name, '_decorated_function', name).__name__
-            return self._register_class(res)
+            func = name
+            name = getattr(name, '_decorated_function', name).__name__
+            return self._register(func, name)
         else:
-
             def dec(func):
-                return self._register_class(func, name)
-
+                return self._register(func, name)
             return dec
 
-    def _register_class(self, func, name=None):
+    def _register(self, func, name=None):
         name = name or getattr(func, '_decorated_function', func).__name__
         self.items[name] = func
         return func
-
-    def create_class(self, func):
-        raise NotImplemented("This method should create a "
-                             "classbased on a given function")

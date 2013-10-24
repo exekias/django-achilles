@@ -52,14 +52,13 @@
                 crossDomain: false,
                 type: 'POST',
                 beforeSend: this.setCSRFHeader,
-                data: msg,
+                data: JSON.stringify(msg),
             });
         },
 
         setCSRFHeader: function(xhr, settings) {
             if (!/^(GET|HEAD|OPTIONS|TRACE)$/.test(settings.type)) {
                 var csrftoken = getCookie('csrftoken');
-                alert(csrftoken);
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
         },

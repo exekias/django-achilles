@@ -2,45 +2,15 @@ from django.test import TestCase
 from achilles.common import BaseLibrary
 
 
-class TestBase(object):
-    pass
-
-
 class Library(BaseLibrary):
-
-    def __init__(self, namespace=None):
-        super(Library, self).__init__(TestBase, namespace)
-
-    def create_class(self, func):
-        return TestBase
+    pass
 
 
 class LibraryTests(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.register = Library()
-
-    def test_register_class1(self):
-        @self.register.register()
-        class Test(TestBase):
-            pass
-
-        self.assertIs(self.register.get('Test'), Test)
-
-    def test_register_class2(self):
-        @self.register.register
-        class Test(TestBase):
-            pass
-
-        self.assertIs(self.register.get('Test'), Test)
-
-    def test_register_class_with_name(self):
-        @self.register.register(name='foo')
-        class Test(TestBase):
-            pass
-
-        self.assertIs(self.register.get('foo'), Test)
+        cls.register = Library('test')
 
     def test_register_function1(self):
         @self.register.register
@@ -64,7 +34,7 @@ class LibraryTests(TestCase):
         def test():
             pass
 
-        self.assertIs(Library.get_global('test'), test)
+        self.assertIs(Library.get_global('test:test'), test)
 
     def test_register_namespaces(self):
         register = Library('namespace')
