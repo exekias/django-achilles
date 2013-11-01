@@ -62,7 +62,7 @@ class BaseLibrary(object):
         if namespace not in cls.registers:
             raise KeyError("'%s' namespace doesn't exists. "
                            "Avaible namespaces are: %s"
-                           % (namespace, cls.registers))
+                           % (namespace, cls.registers.keys()))
         register = cls.registers[namespace]
         try:
             return register.get(name)
