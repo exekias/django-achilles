@@ -25,7 +25,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
+#    'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
 )
 
@@ -49,6 +49,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_nose',
     'achilles',
+    'demo',
 )
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-#ROOT_URLCONF = 'demo.urls'
+ROOT_URLCONF = 'demo.urls'
