@@ -2,7 +2,7 @@ from django.http import HttpResponseBadRequest, HttpResponse
 
 import json
 
-from .blocks import render_blocks, update
+from .blocks import render_blocks
 import actions
 
 
@@ -16,8 +16,6 @@ def endpoint(request):
         action = actions.get(name)
         action(request, *a.get('args', []), **a.get('kwargs', {}))
 
-
-    print request._achilles['blocks']
     result = {
         'blocks': render_blocks(request),
     }

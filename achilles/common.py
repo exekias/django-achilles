@@ -60,14 +60,14 @@ class BaseLibrary(object):
         else:
             namespace = None
         if namespace not in cls.registers:
-            raise KeyError("'%s' namespace doesn't exists" % namespace)
+            raise KeyError("'%s' namespace doesn't exists. "
+                           "Avaible namespaces are: %s"
+                           % (namespace, cls.registers))
         register = cls.registers[namespace]
         try:
             return register.get(name)
         except KeyError:
-            pass
-
-        raise KeyError("'%s' doesn't exists" % name)
+            raise KeyError("'%s' doesn't exists" % name)
 
     def register(self, name=None):
         if name is None:
