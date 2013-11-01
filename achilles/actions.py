@@ -26,7 +26,7 @@ def get(name):
     for app in settings.INSTALLED_APPS:
         try:
             import_module(app + '.actions')
-        except:
+        except ImportError:
             pass
 
     return Library.get_global(name)

@@ -69,7 +69,7 @@ def get(name, context=None):
     for app in settings.INSTALLED_APPS:
         try:
             import_module(app + '.blocks')
-        except:
+        except ImportError:
             pass
 
     return Library.get_global(name)(context)
@@ -111,6 +111,7 @@ def update(request, name, *args, **kwargs):
         'kwargs': kwargs,
         'data': block.render(*args, **kwargs),
     })
+
 
 def render_blocks(request):
     return achilles_from_request(request, 'blocks', [])
