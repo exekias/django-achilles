@@ -6,7 +6,7 @@ from django.utils.log import getLogger
 from inspect import isclass
 from importlib import import_module
 
-from achilles.common import BaseLibrary, achilles_from_request
+from achilles.common import BaseLibrary, achilles_data
 from achilles.actions import Library as ActionsLibrary
 
 logger = getLogger(__name__)
@@ -104,7 +104,7 @@ def update(request, name, *args, **kwargs):
     Update a block (with optional block params)
     """
     block = get(name)
-    blocks = achilles_from_request(request, 'blocks', [])
+    blocks = achilles_data(request, 'blocks', [])
     blocks.append({
         'name': name,
         'args': args,
@@ -114,4 +114,4 @@ def update(request, name, *args, **kwargs):
 
 
 def render_blocks(request):
-    return achilles_from_request(request, 'blocks', [])
+    return achilles_data(request, 'blocks', [])

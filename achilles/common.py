@@ -1,6 +1,6 @@
 
 
-def achilles_from_request(request, key=None, default=None):
+def achilles_data(request, key=None, default=None):
     """
     Return achilles response dict. Achilles stores here data related
     to the request, in order to prepare a reply.
