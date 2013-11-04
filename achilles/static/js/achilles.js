@@ -17,12 +17,15 @@
 
     achilles.fn = achilles.prototype = {
 
-        // Map of response handlers
-        controllers : {},
-
         // Init achilles instance, set the server endpoint URL
         init: function(endpoint) {
-            this.transport = new JSONTransport(endpoint);
+            this.transport = new JSONTransport(this, endpoint);
+            this.controllers = {};
+
+            this.registerController('blocks', blocks_controller);
+            this.registerController('actions', actions_controller);
+
+            // Register default controllers
             return this;
         },
 
@@ -33,6 +36,20 @@
             this.controllers[key] = controller;
         },
 
+
+        // Process a message from the server
+        processResponse: function(data) {
+            for (c in data) {
+                if (!(c in this.controllers)) {
+                    console.log("Unknown controller " + c);
+                    continue;
+                }
+
+                // Let the controller process its data
+                controller = this.controllers[c];
+                controller(this, data[c]);
+            }
+        },
     };
 
     achilles.fn.init.prototype = achilles.fn;
@@ -40,19 +57,28 @@
 
     /* JSON TRANSPORT */
     /* Default messages transport, using JQuery.ajax */
-    function JSONTransport(endpoint) {
+    function JSONTransport(achilles, endpoint) {
         this.endpoint = endpoint;
+        this.achilles = achilles;
     }
 
     JSONTransport.fn = JSONTransport.prototype = {
         // Send the given message to the server
         send: function(msg) {
+            // Server processes array of dicts
+            if (!(msg instanceof Array)) msg = [msg];
+
+            var _achilles = this.achilles;
             return $.ajax({
                 url: this.endpoint,
                 crossDomain: false,
                 type: 'POST',
                 beforeSend: this.setCSRFHeader,
                 data: JSON.stringify(msg),
+            })
+            // Send success data back to achilles
+            .success(function(data) {
+                _achilles.processResponse(data)
             });
         },
 
@@ -85,54 +111,48 @@
 
     /* BLOCKS */
 
-    BlockController = {
-
-        updaters: {
-            HTML: function (block, data) {
-                block.html(data)
-            },
-        },
-
-        get: function(name, args, kwargs) {
-            return $('[data-ablock="'+name+'"]');
-        },
-
-        // Controller process function
-        process: function(data) {
-            for (b in data) {
-                updater = updaters(b.updater || 'HTML');
-                block = achilles.blocks.get(b.name, b.args, b.kwargs);
-                updater(block, b.data);
-            }
-        },
-
+    // Register the response controller
+    function blocks_controller(achilles, data) {
+        for (b in data) {
+            block = data[b];
+            updater = achilles.block_updaters[block.updater || 'HTML'];
+            blocks = achilles.blocks(block.name, block.args, block.kwargs);
+            updater(blocks, block.data);
+        }
     };
 
-    // Expose blocks as part of achilles api
-    achilles.fn.blocks = BlockController;
+    // Available block updaters TODO: move to instance var
+    achilles.fn.block_updaters = {
+        HTML: function (block, data) {
+            block.html(data)
+        },
+    };
 
-    // Register the response controller
-    achilles.fn.registerController('blocks', BlockController);
+    // Look for blocks matching the given criteria
+    achilles.fn.blocks = function(name, args, kwargs) {
+        return $('[data-ablock="'+name+'"]');
+    };
 
 
 
     /* ACTIONS */
 
-    ActionController = {
-
-        // Controller process function
-        process: function(data) {
-            for (a in data) {
-            }
-        },
-
+    // Register the response controller
+    function actions_controller(achilles, data) {
+        for (a in data) {
+            action = data[a];
+            alert("Action result: " + a.ret + "!");
+        }
     };
 
-    // Expose actions as part of achilles api
-    achilles.fn.actions = ActionController;
-
-    // Register the response controller
-    achilles.fn.registerController('actions', BlockController);
+    // Remote action call
+    achilles.fn.action = function(name, args, kwargs) {
+        return this.transport.send({
+            name: name,
+            args: args,
+            kwargs: kwargs
+        });
+    };
 
 
     // Expose achilles
