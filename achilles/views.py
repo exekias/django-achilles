@@ -2,8 +2,8 @@ from django.http import HttpResponseBadRequest, HttpResponse
 
 import json
 
-from .blocks import render_blocks
-import actions
+from achilles.blocks import render_blocks
+from achilles import actions
 
 
 def endpoint(request):

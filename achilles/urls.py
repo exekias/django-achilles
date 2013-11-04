@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-from .views import endpoint
+from achilles.views import endpoint
 
 
 urlpatterns = patterns(
