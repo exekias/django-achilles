@@ -1,0 +1,18 @@
+{% load achilles %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Django Achilles demo</title>
+  </head>
+  <body>
+    {% csrf_token %}
+    <div>
+       This is a test:
+        {% ablock 'counter:simple' %}
+
+        <a href="javascript:achilles.action('blocks:update', ['counter:simple'])">Update!</a>
+    </div>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    {% achilles_js %}
+  </body>
+</html>
