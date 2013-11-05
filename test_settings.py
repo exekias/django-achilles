@@ -25,12 +25,11 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 TEMPLATE_LOADERS = (
-#    'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '@=!f(i#=#ll&2+@0v4hzb*x+*+74h4)1hqw#+37@%41d46s#ia'
+SECRET_KEY = 'CHANGE_FOR_PRODUCTION'
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
@@ -49,7 +48,5 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_nose',
     'achilles',
-    'demo',
 )
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-ROOT_URLCONF = 'demo.urls'
