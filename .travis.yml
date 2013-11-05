@@ -1,0 +1,11 @@
+language: python
+python:
+  - "2.7"
+env:
+#  - DJANGO=1.4.9 test database creation not working
+  - DJANGO=1.5.5
+install:
+  - pip install -q Django==$DJANGO --use-mirrors
+  - pip install -r requirements-dev.txt
+script:
+  - make sense
