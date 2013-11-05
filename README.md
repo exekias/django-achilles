@@ -1,4 +1,4 @@
-Achilles
-========
+Achilles - Django AJAX Framework
+================================
 
-Django AJAX Framework
+Under development
