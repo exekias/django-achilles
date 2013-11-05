@@ -15,7 +15,7 @@ setup(
     author='Carlos Pérez-Aradros Herce',
     author_email='exekias@gmail.com',
     description='Django AJAX Framework',
-    packages=find_packages(exclude=['demo', '*.tests']),
+    packages=find_packages(exclude=['example', '*.tests']),
     include_package_data=True,
     install_requires=[r.strip() for r in dump('requirements.txt')],
     setup_requires=[r.strip() for r in dump('requirements-dev.txt')],
