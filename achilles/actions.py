@@ -2,7 +2,7 @@ from django.conf import settings
 from django.utils.log import getLogger
 from importlib import import_module
 
-from achilles.common import BaseLibrary
+from achilles.common import BaseLibrary, achilles_data
 
 logger = getLogger(__name__)
 
@@ -30,3 +30,21 @@ def get(name):
             pass
 
     return Library.get_global(name)
+
+
+def run_actions(request, actions):
+    """
+    Run the given list of actions sent by the client
+    """
+    data = achilles_data(request, 'actions', {})
+    for a in actions:
+        name = a['name']
+        action = get(name)
+
+        # run and save return value
+        ret = action(request, *a.get('args', []), **a.get('kwargs', {}))
+        data[a['id']] = ret
+
+
+def render_actions(request):
+    return achilles_data(request, 'actions', [])

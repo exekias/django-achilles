@@ -46,7 +46,7 @@
                 }
 
                 // Let the controller process its data
-                controller = this.controllers[c];
+                var controller = this.controllers[c];
                 controller(this, data[c]);
             }
         },
@@ -114,9 +114,9 @@
     // Register the response controller
     function blocks_controller(achilles, data) {
         for (b in data) {
-            block = data[b];
-            updater = achilles.block_updaters[block.updater || 'HTML'];
-            blocks = achilles.blocks(block.name, block.args, block.kwargs);
+            var block = data[b];
+            var updater = achilles.block_updaters[block.updater || 'HTML'];
+            var blocks = achilles.blocks(block.name, block.args, block.kwargs);
             updater(blocks, block.data);
         }
     };
@@ -138,20 +138,37 @@
     /* ACTIONS */
 
     // Register the response controller
-    function actions_controller(achilles, data) {
-        for (a in data) {
-            action = data[a];
-            alert("Action result: " + a.ret + "!");
+    function actions_controller(achilles, actions) {
+        for (id in actions) {
+            var ret = actions[id];
+            achilles._actions[id].resolve(ret);
         }
     };
 
     // Remote action call
     achilles.fn.action = function(name, args, kwargs) {
-        return this.transport.send({
+        // Create actions metadata on first call
+        if (!this._actions) {
+            this._actions = {
+                count: 0,
+                pending: {},
+            }
+        }
+
+        // Save action deferred to trigger it when the response comes
+        var action_id = this._actions.count++;
+        var action_deferred = $.Deferred();
+        this._actions[action_id] = action_deferred;
+
+        // Launch the action
+        this.transport.send({
             name: name,
+            id: action_id,
             args: args,
             kwargs: kwargs
         });
+
+        return action_deferred;
     };
 
 

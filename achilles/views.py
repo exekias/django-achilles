@@ -2,8 +2,8 @@ from django.http import HttpResponseBadRequest, HttpResponse
 
 import json
 
+from achilles.actions import run_actions, render_actions
 from achilles.blocks import render_blocks
-from achilles import actions
 
 
 def endpoint(request):
@@ -11,12 +11,10 @@ def endpoint(request):
         return HttpResponseBadRequest()
 
     data = json.loads(request.body)
-    for a in data:
-        name = a['name']
-        action = actions.get(name)
-        action(request, *a.get('args', []), **a.get('kwargs', {}))
+    run_actions(request, data)
 
     result = {
         'blocks': render_blocks(request),
+        'actions': render_actions(request),
     }
     return HttpResponse(json.dumps(result), content_type="application/json")
