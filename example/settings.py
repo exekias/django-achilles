@@ -39,6 +39,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'achilles',
-    'simplecounter',
+    'achillesexample',
 )
-ROOT_URLCONF = 'simplecounter.urls'
+ROOT_URLCONF = 'achillesexample.urls'

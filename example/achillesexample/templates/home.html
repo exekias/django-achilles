@@ -1,0 +1,39 @@
+{% load achilles %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Django Achilles demo</title>
+  </head>
+  <body>
+    {% csrf_token %}
+    <div>
+        <h1>Blocks</h1>
+        This is a block with load count:
+        {% ablock 'example:counter' %}
+
+        <a href="javascript:achilles.action('blocks:update', ['example:counter'])">Update!</a>
+    </div>
+    <div>
+        <h1>Actions</h1>
+        We have remote action calls with return values!
+        <input type="text" id="a" size="4" value="8" /> x
+        <input type="text" id="b" size="4" value="7" /> =
+        <input type="text" id="res" size="7" value="?" disabled="disabled" />
+
+        <script type="text/javascript">
+            function calculate() {
+                achilles.action('example:multiply', [$('#a').val(), $('#b').val()])
+                .done(function (res) {
+                    $('#res').val(res);
+                });
+            }
+        </script>
+        <a href="javascript:calculate()">Calculate!</a>
+    </div>
+
+
+
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    {% achilles_js %}
+  </body>
+</html>
