@@ -4,6 +4,7 @@ python:
 env:
 #  - DJANGO=1.4.9 test database creation not working
   - DJANGO=1.5.5
+  - DJANGO=1.6
 install:
   - pip install -q Django==$DJANGO --use-mirrors
   - pip install -r requirements-dev.txt
