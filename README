@@ -1,0 +1,6 @@
+Achilles - Django AJAX Framework
+================================
+
+Achilles provides a framework to communicate with Django applications using
+AJAX. Trough the use of some primitives it allows you to build asynchronous
+applications without the need of writting javascript to manage client side.
