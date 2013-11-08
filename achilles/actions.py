@@ -46,5 +46,5 @@ def run_actions(request, actions):
         data[a['id']] = ret
 
 
-def render_actions(request):
+def render(request):
     return achilles_data(request, 'actions', [])

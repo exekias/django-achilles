@@ -113,5 +113,5 @@ def update(request, name, *args, **kwargs):
     })
 
 
-def render_blocks(request):
+def render(request):
     return achilles_data(request, 'blocks', [])

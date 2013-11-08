@@ -1,9 +1,9 @@
 from django.http import HttpResponseBadRequest, HttpResponse
 
-import json
+from achilles.common import achilles_renders
+from achilles.actions import run_actions
 
-from achilles.actions import run_actions, render_actions
-from achilles.blocks import render_blocks
+import json
 
 
 def endpoint(request):
@@ -13,8 +13,8 @@ def endpoint(request):
     data = json.loads(request.body)
     run_actions(request, data)
 
-    result = {
-        'blocks': render_blocks(request),
-        'actions': render_actions(request),
-    }
+    result = {}
+    for (namespace, render) in achilles_renders().iteritems():
+        result[namespace] = render(request)
+
     return HttpResponse(json.dumps(result), content_type="application/json")
