@@ -1,7 +1,7 @@
 
 module("blocks");
 test("get", function() {
-    achilles = achilles('/endpoint/');
+    achilles = Achilles('/endpoint/');
 
     equal(achilles.blocks('test').length, 1, "got one block");
 

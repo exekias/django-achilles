@@ -11,23 +11,27 @@
     /* CORE */
 
     // Main constructor
-    var achilles = function(endpoint) {
-        return new achilles.fn.init(endpoint);
+    var Achilles = function(endpoint) {
+        return new Achilles.fn.init(endpoint);
     };
 
-    achilles.fn = achilles.prototype = {
+    Achilles.fn = Achilles.prototype = {
 
         // Init achilles instance, set the server endpoint URL
         init: function(endpoint) {
             this.transport = new JSONTransport(this, endpoint);
-            this.controllers = {};
 
-            this.registerController('blocks', blocks_controller);
-            this.registerController('actions', actions_controller);
-
-            // Register default controllers
+            // Init controllers for this instance
+            for (c in this.controllers) {
+                controller = this.controllers[c];
+                controller.init(this);
+            }
             return this;
         },
+
+
+        // Response controllers
+        controllers: {},
 
         // Register a response controller
         //     key - key from the response data to pass to this controller
@@ -47,12 +51,12 @@
 
                 // Let the controller process its data
                 var controller = this.controllers[c];
-                controller(this, data[c]);
+                controller.process(this, data[c]);
             }
         },
     };
 
-    achilles.fn.init.prototype = achilles.fn;
+    Achilles.fn.init.prototype = Achilles.fn;
 
 
     /* JSON TRANSPORT */
@@ -112,49 +116,58 @@
     /* BLOCKS */
 
     // Register the response controller
-    function blocks_controller(achilles, data) {
-        for (b in data) {
-            var block = data[b];
-            var updater = achilles.block_updaters[block.updater || 'HTML'];
-            var blocks = achilles.blocks(block.name, block.args, block.kwargs);
-            updater(blocks, block.data);
-        }
-    };
+    var blocks_controller = {
+        init: function(achilles) {
+            achilles.block_updaters = {
+                HTML: function (block, data) {
+                    block.html(data)
+                },
+            };
+        },
 
-    // Available block updaters TODO: move to instance var
-    achilles.fn.block_updaters = {
-        HTML: function (block, data) {
-            block.html(data)
+        process: function(achilles, data) {
+            for (b in data) {
+                var block = data[b];
+                var updater = achilles.block_updaters[block.updater || 'HTML'];
+                var blocks = achilles.blocks(block.name, block.args, block.kwargs);
+                updater(blocks, block.data);
+            }
         },
     };
 
     // Look for blocks matching the given criteria
-    achilles.fn.blocks = function(name, args, kwargs) {
+    Achilles.fn.blocks = function(name, args, kwargs) {
         return $('[data-ablock="'+name+'"]');
     };
+
+    // Register the controller
+    Achilles.fn.registerController('blocks', blocks_controller);
 
 
 
     /* ACTIONS */
 
     // Register the response controller
-    function actions_controller(achilles, actions) {
-        for (id in actions) {
-            var ret = actions[id];
-            achilles._actions[id].resolve(ret);
-        }
-    };
+    var actions_controller = {
 
-    // Remote action call
-    achilles.fn.action = function(name, args, kwargs) {
-        // Create actions metadata on first call
-        if (!this._actions) {
-            this._actions = {
+        init: function(achilles) {
+            // Actions metadata
+            achilles._actions = {
                 count: 0,
                 pending: {},
             }
-        }
+        },
 
+        process: function(achilles, actions) {
+            for (id in actions) {
+                var ret = actions[id];
+                achilles._actions[id].resolve(ret);
+            }
+        },
+    };
+
+    // Remote action call
+    Achilles.fn.action = function(name, args, kwargs) {
         // Save action deferred to trigger it when the response comes
         var action_id = this._actions.count++;
         var action_deferred = $.Deferred();
@@ -171,8 +184,11 @@
         return action_deferred;
     };
 
+    // Register the controller
+    Achilles.fn.registerController('actions', actions_controller);
+
 
     // Expose achilles
-    window.achilles = achilles;
+    window.Achilles = Achilles;
 })(window);
 
