@@ -14,7 +14,7 @@ def achilles_js():
     endpoint = reverse('achilles.views.endpoint')
     return """
         <script src="%s"></script>
-        <script type="text/javascript">achilles = achilles('%s');</script>
+        <script type="text/javascript">achilles = Achilles('%s');</script>
     """ % (achilles_js, endpoint)
 
 

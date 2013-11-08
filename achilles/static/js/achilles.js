@@ -11,11 +11,11 @@
     /* CORE */
 
     // Main constructor
-    var achilles = function(endpoint) {
-        return new achilles.fn.init(endpoint);
+    var Achilles = function(endpoint) {
+        return new Achilles.fn.init(endpoint);
     };
 
-    achilles.fn = achilles.prototype = {
+    Achilles.fn = Achilles.prototype = {
 
         // Init achilles instance, set the server endpoint URL
         init: function(endpoint) {
@@ -52,7 +52,7 @@
         },
     };
 
-    achilles.fn.init.prototype = achilles.fn;
+    Achilles.fn.init.prototype = Achilles.fn;
 
 
     /* JSON TRANSPORT */
@@ -122,14 +122,14 @@
     };
 
     // Available block updaters TODO: move to instance var
-    achilles.fn.block_updaters = {
+    Achilles.fn.block_updaters = {
         HTML: function (block, data) {
             block.html(data)
         },
     };
 
     // Look for blocks matching the given criteria
-    achilles.fn.blocks = function(name, args, kwargs) {
+    Achilles.fn.blocks = function(name, args, kwargs) {
         return $('[data-ablock="'+name+'"]');
     };
 
@@ -146,7 +146,7 @@
     };
 
     // Remote action call
-    achilles.fn.action = function(name, args, kwargs) {
+    Achilles.fn.action = function(name, args, kwargs) {
         // Create actions metadata on first call
         if (!this._actions) {
             this._actions = {
@@ -173,6 +173,6 @@
 
 
     // Expose achilles
-    window.achilles = achilles;
+    window.Achilles = Achilles;
 })(window);
 
