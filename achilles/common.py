@@ -20,9 +20,6 @@ def achilles_data(request, key=None, default=None):
     if not hasattr(request, '_achilles'):
         request._achilles = {}
 
-    if key is None:
-        return request._achilles
-
     if key not in request._achilles and default is not None:
         request._achilles[key] = default
 
