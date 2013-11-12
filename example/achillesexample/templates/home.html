@@ -15,20 +15,54 @@
     </div>
     <div>
         <h1>Actions</h1>
-        We have remote action calls with return values!
-        <input type="text" id="a" size="4" value="8" /> x
-        <input type="text" id="b" size="4" value="7" /> =
-        <input type="text" id="res" size="7" value="?" disabled="disabled" />
+        <div>
+            We have remote action calls with return values!
+            <input type="text" id="ma" size="4" value="8" /> x
+            <input type="text" id="mb" size="4" value="7" /> =
+            <input type="text" id="mres" size="7" value="?" disabled="disabled" />
+            <span id="merror" style="color: red"></span>
 
-        <script type="text/javascript">
-            function calculate() {
-                achilles.action('example:multiply', [$('#a').val(), $('#b').val()])
-                .done(function (res) {
-                    $('#res').val(res);
-                });
-            }
-        </script>
-        <a href="javascript:calculate()">Calculate!</a>
+            <br />
+
+            <script type="text/javascript">
+                function multiply() {
+                    achilles.action('example:multiply', [$('#ma').val(), $('#mb').val()])
+                    .done(function (res) {
+                        $('#merror').html('');
+                        $('#mres').val(res);
+                    })
+                    .fail(function (error, message) {
+                        $('#merror').html('ERROR: ' + message);
+                    });
+                }
+            </script>
+            <a href="javascript:multiply()">Calculate!</a>
+
+        </div>
+        <div>
+            And error management :)
+
+            <input type="text" id="da" size="4" value="10" /> /
+            <input type="text" id="db" size="4" value="0" /> =
+            <input type="text" id="dres" size="7" value="?" disabled="disabled" />
+            <span id="derror" style="color: red"></span>
+
+            <br />
+
+            <script type="text/javascript">
+                function divide() {
+                    achilles.action('example:divide', [$('#da').val(), $('#db').val()])
+                    .done(function (res) {
+                        $('#derror').html('');
+                        $('#dres').val(res);
+                    })
+                    .fail(function (error, message) {
+                        $('#derror').html('ERROR: ' + message);
+                    });
+                }
+            </script>
+            <a href="javascript:divide()">Calculate!</a>
+        </div>
     </div>
 
 
