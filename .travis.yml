@@ -1,6 +1,9 @@
 language: python
 python:
   - "2.7"
+branches:
+  only:
+    - master
 env:
 #  - DJANGO=1.4.9 test database creation not working
   - DJANGO=1.5.5
