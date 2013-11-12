@@ -160,8 +160,14 @@
 
         process: function(achilles, actions) {
             for (id in actions) {
-                var ret = actions[id];
-                achilles._actions[id].resolve(ret);
+                var action = achilles._actions[id];
+                var result = actions[id];
+                if (result.error) {
+                    action.reject(result.error, result.message);
+                }
+                else {
+                    action.resolve(result.value);
+                }
             }
         },
     };
@@ -179,6 +185,9 @@
             id: action_id,
             args: args,
             kwargs: kwargs
+        }).error(function(jqXHR, textStatus) {
+            // Reject in case of ajax error
+            action_deferred.reject(textStatus);
         });
 
         return action_deferred;

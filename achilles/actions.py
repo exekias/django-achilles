@@ -42,8 +42,17 @@ def run_actions(request, actions):
         action = get(name)
 
         # run and save return value
-        ret = action(request, *a.get('args', []), **a.get('kwargs', {}))
-        data[a['id']] = ret
+        try:
+            result = action(request, *a.get('args', []), **a.get('kwargs', {}))
+            data[a['id']] = {
+                'value': result
+            }
+        except Exception as e:
+            # Mark as error
+            data[a['id']] = {
+                'error': e.__class__.__name__,
+                'message': unicode(e),
+            }
 
 
 def render(request):

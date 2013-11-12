@@ -47,6 +47,23 @@ class ActionsTests(TestCase):
 
         data = actions.render(self.request)
 
-        self.assertEqual(data["1"], 13)
-        self.assertEqual(data["2"], 2)
-        self.assertEqual(data["3"], 33)
+        self.assertEqual(data["1"]["value"], 13)
+        self.assertEqual(data["2"]["value"], 2)
+        self.assertEqual(data["3"]["value"], 33)
+
+    def test_run_actions_error(self):
+        @self.register.action
+        def action(request):
+            raise ValueError('foo')
+
+        actions.run_actions(self.request, [
+            {
+                'name': 'action',
+                'id': '1',
+            },
+        ])
+
+        data = actions.render(self.request)
+
+        self.assertEqual(data["1"]["error"], 'ValueError')
+        self.assertEqual(data["1"]["message"], 'foo')
