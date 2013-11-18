@@ -42,7 +42,7 @@ def achilles_renders():
     Return a dict of enabled plugin' render functions
     """
     return {k: import_by_path('%s.render' % p)
-            for k, p in achilles_plugins().iteritems()}
+            for k, p in achilles_plugins().items()}
 
 
 # This method is borrowed from Django 1.6:
