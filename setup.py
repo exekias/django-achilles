@@ -1,5 +1,7 @@
 # encoding: utf-8
 import os
+import sys
+
 from setuptools import setup, find_packages
 
 
@@ -7,6 +9,14 @@ version = __import__('achilles').get_version()
 
 def dump(filename):
     return open(os.path.join(os.path.dirname(__file__), filename))
+
+extra = {}
+
+# Use 2to3 for Python 3 support
+if sys.version_info >= (3, 0):
+    extra.update(
+        use_2to3=True,
+    )
 
 setup(
     name='django-achilles',
@@ -32,4 +42,5 @@ setup(
         'Intended Audience :: Developers',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
+    **extra
 )
