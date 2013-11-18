@@ -1,13 +1,21 @@
 language: python
 python:
   - "2.7"
-branches:
-  only:
-    - master
+  - "3.2"
+  - "3.3"
 env:
 #  - DJANGO=1.4.9 test database creation not working
   - DJANGO=1.5.5
   - DJANGO=1.6
+matrix:
+  exclude:
+    - python: "3.2"
+      env: DJANGO=1.5.5
+    - python: "3.3"
+      env: DJANGO=1.5.5
+branches:
+  only:
+    - master
 install:
   - pip install -q Django==$DJANGO --use-mirrors
   - pip install -r requirements-dev.txt
