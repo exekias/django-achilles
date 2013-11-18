@@ -51,7 +51,7 @@ def run_actions(request, actions):
             # Mark as error
             data[a['id']] = {
                 'error': e.__class__.__name__,
-                'message': unicode(e),
+                'message': str(e),
             }
 
 
