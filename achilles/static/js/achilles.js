@@ -24,7 +24,7 @@
             // Init controllers for this instance
             for (c in this.controllers) {
                 controller = this.controllers[c];
-                controller.init(this);
+                if (controller.init) controller.init(this);
             }
             return this;
         },
@@ -195,6 +195,24 @@
 
     // Register the controller
     Achilles.fn.registerController('actions', actions_controller);
+
+
+    /* LOGS */
+
+    var console_controller = {
+
+        process: function(achilles, logs) {
+            // Avoid unsupported browsers
+            if (!window.console) return;
+
+            for (i in logs) {
+                console.log(logs[i]);
+            }
+        },
+    };
+
+    // Register the controller
+    Achilles.fn.registerController('console', console_controller);
 
 
     // Expose achilles

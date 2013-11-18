@@ -34,6 +34,7 @@ def achilles_plugins():
                    {
                        'blocks': 'achilles.blocks',
                        'actions': 'achilles.actions',
+                       'console': 'achilles.console',
                    })
 
 

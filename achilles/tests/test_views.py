@@ -22,4 +22,4 @@ class ActionsTests(TestCase):
         result = endpoint(self.request)
         data = json.loads(result.content)
 
-        self.assertListEqual(achilles_plugins().keys(), data.keys())
+        self.assertEqual(set(achilles_plugins().keys()), set(data.keys()))

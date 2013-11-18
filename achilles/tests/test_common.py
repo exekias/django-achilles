@@ -42,7 +42,7 @@ class AchillesRendersTests(TestCase):
         plugins = achilles_plugins()
         renders = achilles_renders()
 
-        self.assertEqual(plugins.keys(), renders.keys())
+        self.assertEqual(set(plugins.keys()), set(renders.keys()))
 
 
 class LibraryTests(TestCase):
