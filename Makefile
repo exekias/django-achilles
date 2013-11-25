@@ -1,6 +1,6 @@
 SRC=achilles
 
-sense: pep8 pyflakes test
+sense: pep8 pyflakes test coverage
 
 test: test_python test_js
 
@@ -16,3 +16,6 @@ pep8:
 
 pyflakes:
 	pyflakes $(SRC)
+
+coverage: test_python
+	coverage report
