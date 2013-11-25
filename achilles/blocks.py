@@ -1,15 +1,9 @@
-from django.conf import settings
-from django.template import Context
-from django.template.loader import get_template
-from django.utils.log import getLogger
-
 from inspect import isclass
 from importlib import import_module
 
+from achilles import backend
 from achilles.common import BaseLibrary, achilles_data
 from achilles.actions import Library as ActionsLibrary
-
-logger = getLogger(__name__)
 
 
 class Library(BaseLibrary):
@@ -66,9 +60,9 @@ def get(name, context=None):
     Return block instance for the given name
     """
     # make sure all blocks are loaded
-    for app in settings.INSTALLED_APPS:
+    for module in backend.block_modules():
         try:
-            import_module(app + '.blocks')
+            import_module(module)
         except ImportError:
             pass
 
@@ -85,11 +79,11 @@ class Block(object):
     template_name = None
 
     def __init__(self, context):
-        self.context = context or Context()
+        self.context = context or backend.template_context()
 
     def render(self, *args, **kwargs):
-        t = get_template(self.template_name)
-        return t.render(self.get_context_data(*args, **kwargs))
+        return backend.render_template(self.template_name,
+                                       self.get_context_data(*args, **kwargs))
 
     def get_context_data(self, *args, **kwargs):
         return self.context
