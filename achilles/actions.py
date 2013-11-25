@@ -1,10 +1,7 @@
-from django.conf import settings
-from django.utils.log import getLogger
 from importlib import import_module
 
+from achilles import backend
 from achilles.common import BaseLibrary, achilles_data
-
-logger = getLogger(__name__)
 
 
 class Library(BaseLibrary):
@@ -23,9 +20,9 @@ def get(name):
     Return action function for the given name
     """
     # make sure all actions are loaded
-    for app in settings.INSTALLED_APPS:
+    for module in backend.action_modules():
         try:
-            import_module(app + '.actions')
+            import_module(module)
         except ImportError:
             pass
 

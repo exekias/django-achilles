@@ -5,6 +5,12 @@ from django.template.loader import get_template
 
 class DjangoBackend(object):
 
+    def action_modules(self):
+        """
+        Return a list of modules that could be holding action libraries
+        """
+        return [app + '.actions' for app in settings.INSTALLED_APPS]
+
     def block_modules(self):
         """
         Return a list of modules that could be holding block libraries
