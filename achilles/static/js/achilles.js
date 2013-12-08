@@ -137,7 +137,42 @@
 
     // Look for blocks matching the given criteria
     Achilles.fn.blocks = function(name, args, kwargs) {
-        return $('[data-ablock="'+name+'"]');
+        var blocks = $('[data-ablock]');
+
+        if (name) blocks = blocks.filter('[data-ablock="'+name+'"]');
+        // TODO filter also by args + kwargs
+
+        return blocks;
+    };
+
+    // Look for the block matching the given criteria
+    Achilles.fn.block = function(name, args, kwargs) {
+        return this.blocks(name, args, kwargs).first();
+    };
+
+    // Update the blocks matching the given criteria
+    Achilles.fn.update = function(block, name, args, kwargs) {
+        var blocks = this.blocks(name, args, kwargs);
+        var _achilles = this;
+
+        blocks.each(function(block) {
+            var name = $(this).attr('data-ablock');
+            var args = $(this).attr('data-ablock-args') || [];
+            var kargs = $(this).attr('data-ablock-kargs') || {};
+            _achilles.action('blocks:update', [name].concat(args), kwargs)
+        });
+    };
+
+    // Load a block into the given element, if the given element is not a block,
+    // this method will convert it to one
+    Achilles.fn.loadInto = function(block, name, args, kwargs) {
+        // Prepare the element wrapper
+        block.attr('data-ablock', name);
+        if (args) block.attr('data-args', args);
+        if (kwargs) block.attr('data-kwargs', kwargs);
+
+        // Call for update
+        this.update(name, args, kwargs);
     };
 
     // Register the controller
