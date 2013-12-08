@@ -5,8 +5,9 @@ sense: pep8 pyflakes test coverage
 test: test_python test_js
 
 test_python:
-	DJANGO_SETTINGS_MODULE=test_settings coverage run --source=achilles \
-                                         setup.py nosetests
+	DJANGO_SETTINGS_MODULE=test_settings    \
+	coverage run --branch --source=achilles \
+                 setup.py nosetests
 
 test_js:
 	phantomjs $(SRC)/tests/run-qunit.js $(SRC)/tests/test.html?coverage=true
@@ -18,4 +19,10 @@ pyflakes:
 	pyflakes $(SRC)
 
 coverage: test_python
-	coverage report
+	coverage report -m
+
+clean:
+	coverage erase
+	find . -name '*.pyc' -delete
+	find . -name __pycache__ -delete
+	rm -rf .coverage dist *.egg build
