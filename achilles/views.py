@@ -22,7 +22,7 @@ def endpoint(request):
     run_actions(request, data)
 
     result = {}
-    for (namespace, render) in achilles_renders().iteritems():
+    for (namespace, render) in achilles_renders().items():
         result[namespace] = render(request)
 
     return HttpResponse(json.dumps(result), content_type="application/json")
