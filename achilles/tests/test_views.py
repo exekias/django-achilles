@@ -1,5 +1,5 @@
-from django.test import RequestFactory
-from django.test import TestCase
+from django.test import RequestFactory, TestCase
+from django.conf import settings
 
 from achilles.common import achilles_plugins
 from achilles.views import endpoint
@@ -20,6 +20,6 @@ class ActionsTests(TestCase):
 
     def test_json_endpoint(self):
         result = endpoint(self.request)
-        data = json.loads(result.content)
+        data = json.loads(result.content.decode(settings.DEFAULT_CHARSET))
 
         self.assertEqual(set(achilles_plugins().keys()), set(data.keys()))
