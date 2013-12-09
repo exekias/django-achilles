@@ -1,2 +1,4 @@
-:mod:`blocks` -- Dynamically loaded blocks
-==========================================
+.. _blocks:
+
+:mod:`achilles.blocks` -- Dynamically loaded blocks
+===================================================

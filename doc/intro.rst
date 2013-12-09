@@ -3,7 +3,7 @@
 Introduction
 ============
 
-Achilles provides a framework to create Django applications using AJAX. Trough the use of some primitives it allows you to build asynchronous without the need of writting javascript to manage client side.
+.. automodule:: achilles
 
 The name of the project comes from ancient Greek mythology, Achilles and Ajax where soldiers who fough together in Trojan War.
 
@@ -13,7 +13,7 @@ The name of the project comes from ancient Greek mythology, Achilles and Ajax wh
     :figclass: align-center
 
     Ajax and Achilles amphora
-    painted by Exekias (Greek, 540 BCE)
+    painted by Exekias (Greece, 540 BCE)
 
 Features
 --------
@@ -23,6 +23,7 @@ This is a basic list of features provided by Achilles:
 * Integration with JQuery and Django (>=1.4)
 * Asynchronous server side action calling (with return values)
 * Dynamically loaded (HTML) blocks
+* Error management
 
 Installation
 ------------

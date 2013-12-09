@@ -1,2 +1,8 @@
-:mod:`actions`
-==============
+.. _actions:
+
+:mod:`achilles.actions` -- Asynchronous actions
+===============================================
+
+.. automodule:: achilles.actions
+    :members:
+    :undoc-members:

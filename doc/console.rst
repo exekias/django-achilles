@@ -1,2 +1,4 @@
-Console
-=======
+.. _console:
+
+:mod:`achilles.console` -- Javascript console
+=============================================
