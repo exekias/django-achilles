@@ -20,5 +20,19 @@ def achilles_js():
 
 @register.simple_tag(takes_context=True)
 def ablock(context, name, *args, **kwargs):
+    """
+    Achilles block, this will load a block once the page is loaded
+    """
     block = blocks.get(name, context, *args, **kwargs)
     return '<div data-ablock="%s">%s</div>' % (name, block.render())
+
+
+@register.simple_tag(takes_context=True)
+def ablock_lazy(context, name, *args, **kwargs):
+    """
+    This block won't load until someone asks for it (from Javascript or
+    server side)
+    """
+    # Make sure the block exists
+    blocks.get(name, context, *args, **kwargs)
+    return '<div data-ablock="%s" data-noload="true"></div>' % name
