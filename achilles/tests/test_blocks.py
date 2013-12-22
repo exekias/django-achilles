@@ -55,3 +55,15 @@ class BlocksTests(TestCase):
             "{% ablock 'message' %}").render(Context())
 
         self.assertEqual(out, '<div data-ablock="message">foo\n</div>')
+
+    def test_render_lazy_block(self):
+        @self.register.block(template_name="block_template.html")
+        def message(self, *args, **kwargs):
+            return {'message': 'foo'}
+
+        out = Template(
+            "{% load achilles %}"
+            "{% ablock_lazy 'message' %}").render(Context())
+
+        self.assertEqual(out, '<div data-ablock="message" ' +
+                              'data-noload="true"></div>')

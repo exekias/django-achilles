@@ -66,7 +66,10 @@ class LibraryTests(TestCase):
         self.assertIs(self.register.get('test'), test)
 
     def test_register_unknown_item(self):
-        self.assertRaises(KeyError, Library.get_global, 'unknown_item')
+        self.assertRaises(KeyError, self.register.get, 'unknown_item')
+
+    def test_register_unknown_item_global(self):
+        self.assertRaises(KeyError, Library.get_global, 'test:unknown_item')
 
     def test_register_get_global(self):
         @self.register.register
