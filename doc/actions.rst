@@ -5,4 +5,3 @@
 
 .. automodule:: achilles.actions
     :members:
-    :undoc-members:

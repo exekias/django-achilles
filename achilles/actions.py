@@ -9,7 +9,20 @@ logger = getLogger(__name__)
 
 class Library(BaseLibrary):
     """
-    Actions register library
+    Action library holds a register of all defined actions
+
+    Use it to define and register new actions, grouping them under
+    a common namespace
+
+    >>> from achilles import actions
+    >>>
+    >>> register = actions.Library('myapp')
+    >>>
+    >>> @register.action
+    >>> def foo(request, *args, **kwargs):
+    >>>     pass
+    >>>
+    >>> actions.get('myapp:bar')
     """
     def __init__(self, namespace=None):
         BaseLibrary.__init__(self, namespace)

@@ -28,8 +28,8 @@ This is a basic list of features provided by Achilles:
 Installation
 ------------
 
-#. Run ``pip install django-achilles``
-#. Add ``achilles`` to `INSTALLED_APPS` in Django settings:
+1. Run ``pip install django-achilles``
+2. Add ``achilles`` to `INSTALLED_APPS` in Django settings:
 
 .. code-block:: django
     :emphasize-lines: 7
@@ -43,7 +43,7 @@ Installation
         'achilles',
     )
 
-#. Create achilles endpoint adding ``achilles.urls`` to your `urls.py` file:
+3. Create achilles endpoint adding ``achilles.urls`` to your `urls.py` file:
 
 .. code-block:: django
     :emphasize-lines: 6
