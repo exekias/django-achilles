@@ -1,10 +1,7 @@
 from django.conf import settings
-from django.utils.log import getLogger
 from importlib import import_module
 
 from achilles.common import BaseLibrary, achilles_data
-
-logger = getLogger(__name__)
 
 
 class Library(BaseLibrary):
@@ -12,17 +9,18 @@ class Library(BaseLibrary):
     Action library holds a register of all defined actions
 
     Use it to define and register new actions, grouping them under
-    a common namespace
+    a common namespace::
 
-    >>> from achilles import actions
-    >>>
-    >>> register = actions.Library('myapp')
-    >>>
-    >>> @register.action
-    >>> def foo(request, *args, **kwargs):
-    >>>     pass
-    >>>
-    >>> actions.get('myapp:bar')
+        from achilles import actions
+
+        register = actions.Library('myapp')
+
+        @register.action
+        def foo(request, *args, **kwargs):
+            # do stuff
+            pass
+
+    :param namespace: Unique namespace for this register
     """
     def __init__(self, namespace=None):
         BaseLibrary.__init__(self, namespace)
@@ -33,7 +31,11 @@ class Library(BaseLibrary):
 
 def get(name):
     """
-    Return action function for the given name
+    Retrieve an action function with the given name. Example::
+
+        actions.get('myapp:foo')
+
+    :param name: Fully namespaced action name
     """
     # make sure all actions are loaded
     for app in settings.INSTALLED_APPS:

@@ -4,4 +4,5 @@
 ===============================================
 
 .. automodule:: achilles.actions
-    :members:
+.. autoclass:: achilles.actions.Library
+.. autofunction:: achilles.actions.get
