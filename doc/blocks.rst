@@ -4,5 +4,7 @@
 ===================================================
 
 .. automodule:: achilles.blocks
+.. autoclass:: achilles.blocks.Block
+.. autoclass:: achilles.blocks.Library
     :members:
-    :undoc-members:
+.. autofunction:: achilles.blocks.get

@@ -14,7 +14,24 @@ logger = getLogger(__name__)
 
 class Library(BaseLibrary):
     """
-    Blocks register library
+    Blocks library holds a register of all defined blocks
+
+    Use it to define and register new blocks, grouping them under
+    a common namespace::
+
+        from achilles import blocks
+
+        register = blocks.Library('myapp')
+
+        @register.block(template_name='foo.html')
+        def foo():
+            return {
+                'template_var1' : 42,
+                'template_var2' : True,
+            }
+
+
+    :param namespace: Unique namespace for this register
     """
     registers = {}
 
@@ -27,7 +44,7 @@ class Library(BaseLibrary):
         elif isclass(name) and issubclass(name, Block):
             return self._register(name)
         elif callable(name):
-            res = self.create_class(name)
+            res = self._create_class(name)
             res.__name__ = getattr(name, '_decorated_function', name).__name__
             return self._register(res)
         else:
@@ -35,7 +52,13 @@ class Library(BaseLibrary):
 
     def block(self, name=None, template_name=None, takes_context=False):
         """
-        Block register method
+        Block register decorator
+
+        :param name: Name of the block, if None the decorated function name
+                     will be taken
+        :param template_name: Path of the block template
+        :param takes_context: If True, the decorated function will receive
+                              the template context as first parameter
         """
         if not template_name:
             return self.register(name)
@@ -48,7 +71,7 @@ class Library(BaseLibrary):
             return res
         return dec
 
-    def create_class(self, func):
+    def _create_class(self, func):
         class B(Block):
             def get_context_data(self, *args, **kwargs):
                 context = super(B, self).get_context_data(*args, **kwargs)
