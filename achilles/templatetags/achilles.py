@@ -12,10 +12,9 @@ register = template.Library()
 def achilles_js():
     achilles_js = settings.STATIC_URL + 'js/achilles.js'
     endpoint = reverse('achilles.views.endpoint')
-    return """
-        <script src="%s"></script>
-        <script type="text/javascript">achilles = Achilles('%s');</script>
-    """ % (achilles_js, endpoint)
+    return ("<script src=\"%s\"></script>\n"
+            "<script type=\"text/javascript\">"
+            "achilles = Achilles('%s')</script>") % (achilles_js, endpoint)
 
 
 @register.simple_tag(takes_context=True)
