@@ -13,9 +13,6 @@ matrix:
       env: DJANGO=1.5.5
     - python: "3.3"
       env: DJANGO=1.5.5
-branches:
-  only:
-    - master
 install:
   - pip install -q Django==$DJANGO --use-mirrors
   - pip install -r requirements-dev.txt
