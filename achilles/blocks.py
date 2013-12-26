@@ -17,19 +17,7 @@ class Library(BaseLibrary):
     Blocks library holds a register of all defined blocks
 
     Use it to define and register new blocks, grouping them under
-    a common namespace::
-
-        from achilles import blocks
-
-        register = blocks.Library('myapp')
-
-        @register.block(template_name='foo.html')
-        def foo():
-            return {
-                'template_var1' : 42,
-                'template_var2' : True,
-            }
-
+    a common namespace. See :func:`block`.
 
     :param namespace: Unique namespace for this register
     """
@@ -52,7 +40,24 @@ class Library(BaseLibrary):
 
     def block(self, name=None, template_name=None, takes_context=False):
         """
-        Block register decorator, see an example at :class:`Library` help
+        Block register decorator, register a block on the library.
+
+        When decorating a function, this method will automatically create a
+        block. The block will use a dict returned by the function as template
+        context::
+
+            from achilles import blocks
+
+            register = blocks.Library('myapp')
+
+            @register.block(template_name='foo.html')
+            def foo():
+                return {
+                    'template_var1' : 42,
+                    'template_var2' : True,
+                }
+
+        When decorating a Block class it will just register it on the library.
 
         :param name: Name of the block, if None the decorated function name
                      will be taken
@@ -104,7 +109,7 @@ def get(name, context=None):
 
 class Block(object):
     """
-    Blocks are parts of the page that can be dinamically render. By calling
+    Blocks are parts of the page that can be dinamically rendered. By calling
     :func:`update` action you can reload any block asynchronously.
 
     In most cases blocks are automatically created out of functions decorated
