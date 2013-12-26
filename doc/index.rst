@@ -9,7 +9,6 @@ Django Achilles
    intro
    tutorial
    modules
-   devel
 
 ..
     Indices and tables

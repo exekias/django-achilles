@@ -148,6 +148,7 @@ def update(request, name, *args, **kwargs):
     the block handler. When using arguments, only blocks matching them
     will be updated.
 
+    :param request: Django request object that is being served
     :param name: Fully namespaced block name
     """
     block = get(name)
