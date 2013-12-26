@@ -4,7 +4,12 @@
 ===================================================
 
 .. automodule:: achilles.blocks
-.. autoclass:: achilles.blocks.Block
 .. autoclass:: achilles.blocks.Library
     :members:
+.. autoclass:: achilles.blocks.Block
+    :members:
 .. autofunction:: achilles.blocks.get
+
+Available actions
+-----------------
+.. autofunction:: achilles.blocks.update

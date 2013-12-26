@@ -52,7 +52,7 @@ class Library(BaseLibrary):
 
     def block(self, name=None, template_name=None, takes_context=False):
         """
-        Block register decorator
+        Block register decorator, see an example at :class:`Library` help
 
         :param name: Name of the block, if None the decorated function name
                      will be taken
@@ -86,7 +86,11 @@ class Library(BaseLibrary):
 
 def get(name, context=None):
     """
-    Return block instance for the given name
+    Retrieve a block with the given name. Example::
+
+        blocks.get('myapp:foo')
+
+    :param name: Fully namespaced block name
     """
     # make sure all blocks are loaded
     for app in settings.INSTALLED_APPS:
@@ -100,21 +104,32 @@ def get(name, context=None):
 
 class Block(object):
     """
-    Block section, defines a block in the page. template_name instance field
-    should be defined, so render method will use it in conjunction with
-    get_context_data
+    Blocks are parts of the page that can be dinamically render. By calling
+    :func:`update` action you can reload any block asynchronously.
+
+    In most cases blocks are automatically created out of functions decorated
+    with :func:`Library.block`. For advanced uses you may need to sublcass
+    this.
     """
-    # Should be defined
+    #: Template file that will be used in :func:`render`
     template_name = None
 
     def __init__(self, context):
         self.context = context or Context()
 
     def render(self, *args, **kwargs):
+        """
+        Render the block, this method receives block arguments (if any)
+        and renders HTML result of the block.
+        """
         t = get_template(self.template_name)
         return t.render(self.get_context_data(*args, **kwargs))
 
     def get_context_data(self, *args, **kwargs):
+        """
+        Returns context to be passed to the template renderer in
+        :func:`render`.
+        """
         return self.context
 
 
@@ -124,7 +139,16 @@ register = ActionsLibrary('blocks')
 @register.action
 def update(request, name, *args, **kwargs):
     """
-    Update a block (with optional block params)
+    Action name: **blocks:update**
+
+    Update a block, if the block doesn't exists on the page nothing will
+    happen.
+
+    Blocks may have arguments, this function will pass any argument to
+    the block handler. When using arguments, only blocks matching them
+    will be updated.
+
+    :param name: Fully namespaced block name
     """
     block = get(name)
     blocks = achilles_data(request, 'blocks', [])
