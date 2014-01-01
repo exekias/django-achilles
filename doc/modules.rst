@@ -10,7 +10,7 @@
 This is the list of builtin Achilles plugins:
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
 
     actions
     blocks
