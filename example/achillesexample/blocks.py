@@ -1,4 +1,5 @@
 from achilles import blocks
+from achilles import tables
 
 register = blocks.Library('example')
 
@@ -11,3 +12,15 @@ def counter():
     return {
         'counter' : COUNTER,
     }
+
+@register.block('mytable')
+class Table(tables.Table):
+
+    a = tables.Column('a')
+    b = tables.Column('b')
+
+    def objects(self):
+        return [
+            { 'a': 'hello', 'b': 3 },
+            { 'a': 'world', 'b': 4 },
+        ]
