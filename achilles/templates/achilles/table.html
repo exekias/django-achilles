@@ -1,0 +1,21 @@
+<table>
+    <thead>
+        <tr>
+        {% for column in table.columns %}
+            <th>{{ column.render }}</th>
+        {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in table.rows %}
+        <tr class="{% cycle "even" "odd" %}">
+            {% for cell in row %}
+                <td>{{ cell.render }}</td>
+            {% endfor %}
+        </tr>
+        {% empty %}
+        <tr><td colspan="{{ table.columns|length }}">{{ table.empty_text }}</td></tr>
+        {% endfor %}
+    </tbody>
+    <tfoot></tfoot>
+</table>
