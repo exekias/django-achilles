@@ -15,4 +15,5 @@ This is the list of builtin Achilles plugins:
     actions
     blocks
     console
+    tables
 
