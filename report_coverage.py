@@ -18,7 +18,7 @@ def get_coverage_with_js(self):
     js_report = []
 
     for f in js_files:
-        source = '\n'.join(open(f['filename']).readlines())
+        source = '\n'.join(l.rstrip() for l in open(f['filename']))
         name = os.path.relpath(f['filename'])
         coverage = []
 
