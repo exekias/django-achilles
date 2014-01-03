@@ -20,4 +20,4 @@ install:
 script:
   - make sense
 after_success:
-  - python report_coverage.py --verbose
+  - python report_coverage.py #--verbose
