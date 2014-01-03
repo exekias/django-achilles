@@ -10,7 +10,7 @@ test_python:
                  `which django-admin.py` test
 
 test_js:
-	phantomjs $(SRC)/tests/run-qunit.js $(SRC)/tests/test.html?coverage=true
+	mocha -u tdd -R list achilles/tests/test_javascript.js
 
 pep8:
 	pep8 $(SRC)
