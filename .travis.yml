@@ -20,5 +20,4 @@ install:
 script:
   - make sense
 after_success:
-  - coveralls --verbose
-  - cat .coverage-js | ./node_modules/coveralls/bin/coveralls.js
+  - python report_coverage.py --verbose

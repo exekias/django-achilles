@@ -14,7 +14,7 @@ test_js:
 	COVERAGE_REPORT=1 mocha -u tdd -R spec \
                             achilles/tests/test_javascript.js --coverage
 	# Save lcov for later
-	@mocha -u tdd -R mocha-lcov-reporter \
+	@mocha -u tdd -R json-cov \
            achilles/tests/test_javascript.js --coverage > .coverage-js
 
 pep8:
