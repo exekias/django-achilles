@@ -20,8 +20,9 @@ def get_coverage_with_js(self):
     for f in js_files:
         source = '\n'.join(open(f['filename']).readlines())
         name = os.path.relpath(f['filename'])
-        coverage = [v['coverage'] for v in f['source'].values()]
-        coverage = map(lambda x: x if x != '' else None, coverage)
+        coverage = []
+        for v in f['source'].values():
+            coverage.append(v['coverage'] if v['coverage'] != '' else None)
 
         js_report.append({
             'source': source,
