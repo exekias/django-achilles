@@ -21,7 +21,9 @@ def get_coverage_with_js(self):
         source = '\n'.join(open(f['filename']).readlines())
         name = os.path.relpath(f['filename'])
         coverage = []
-        for v in f['source'].values():
+
+        # Create sorted coverage array from original dict
+        for k, v in sorted(f['source'].items(), key=lambda x:int(x[0])):
             coverage.append(v['coverage'] if v['coverage'] != '' else None)
 
         js_report.append({
