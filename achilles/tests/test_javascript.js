@@ -1,11 +1,19 @@
 var jsdom = require('jsdom').jsdom;
 var assert = require('assert');
+var jsc = require('jscoverage');
 
 doc = jsdom('<html><body><div data-ablock="test"></div></body></html>');
 window = doc.createWindow();
 
 $ = require('jquery')(window);
-require("../static/js/achilles.js");
+jsc.require(module, '../static/js/achilles.js');
+
+if (process.env.COVERAGE_REPORT) {
+    process.on('exit', function () {
+        jsc.coverage();
+        jsc.coverageDetail();
+    });
+}
 
 
 suite('Blocks', function() {

@@ -3,3 +3,6 @@ node-gyp --python=/usr/bin/python2.7
 jsdom
 assert
 jquery
+jscoverage
+coveralls
+mocha-lcov-reporter
