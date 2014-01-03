@@ -16,7 +16,8 @@ matrix:
 install:
   - pip install -q Django==$DJANGO --use-mirrors
   - pip install -r requirements-dev.txt
+  - cat requirements-npm.txt | xargs npm install
 script:
   - make sense
 after_success:
-  - coveralls --verbose
+  - python report_coverage.py #--verbose
