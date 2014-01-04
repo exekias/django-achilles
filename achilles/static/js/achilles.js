@@ -45,7 +45,7 @@
         processResponse: function(data) {
             for (c in data) {
                 if (!(c in this.controllers)) {
-                    console.log("Unknown controller " + c);
+                    console.error("Unknown controller " + c);
                     continue;
                 }
 
