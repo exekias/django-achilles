@@ -75,6 +75,38 @@ suite('Blocks', function() {
     });
 
 
+    // blocks:update remote action calling
+    suite('Update', function() {
+        var called = 0;
+        var name, args, kwargs;
+        setup(function() {
+            // mock achilles.action
+            called = 0;
+            name = args = kwargs = null;
+
+            achilles.action = function(n, a, kw) {
+                called += 1;
+                name = n;
+                args = a;
+                kwargs = kw;
+            };
+        });
+        test('Update one block', function() {
+            $('body').append($('<div data-ablock="test"></div>'));
+            achilles.update('test');
+            assert.equal(called, 1);
+            assert.equal(name, 'blocks:update');
+        });
+
+        test('Update more than one block', function() {
+            $('body').append($('<div data-ablock="test"></div>'));
+            $('body').append($('<div data-ablock="test"></div>'));
+            achilles.update('test');
+            assert.equal(called, 2);
+        });
+    });
+
+
     // Server response processing
     suite('Process response', function() {
         test('Simple block update', function() {
