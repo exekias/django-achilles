@@ -13,7 +13,7 @@ test_python:
 test_js:
 	COVERAGE_REPORT=1 mocha -u tdd -R spec \
                             achilles/tests/test_javascript.js --coverage
-	# Save lcov for later
+	@echo Writting coverage results to .coverage-js
 	@mocha -u tdd -R json-cov \
            achilles/tests/test_javascript.js --coverage > .coverage-js
 
