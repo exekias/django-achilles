@@ -5,8 +5,8 @@ sense: pep8 pyflakes test
 test: test_python test_js
 
 test_python:
-	PYTHONPATH=. DJANGO_SETTINGS_MODULE=test_settings  \
-    coverage run --source=achilles --branch            \
+	PYTHONPATH=. DJANGO_SETTINGS_MODULE=test_settings                \
+    coverage run --source=achilles --branch --omit=achilles/tests/*  \
                  `which django-admin.py` test
 	coverage report -m
 
