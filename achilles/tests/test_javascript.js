@@ -16,12 +16,27 @@ if (process.env.COVERAGE_REPORT) {
 }
 
 
+// mock helper function
+function mock() {
+    var res = function() {
+        res.called += 1;
+        res.args = Array.prototype.slice.call(arguments);;
+    }
+    res.called = 0;
+
+    return res;
+};
+
+setup(function() {
+    achilles = window.Achilles('/endpoint/');
+});
+
+teardown(function() {
+    $('body').empty();
+});
+
 
 suite('Core', function() {
-    setup(function() {
-        achilles = window.Achilles('/endpoint/');
-    });
-
     suite('processResponse', function() {
         test('Ignores unknown controllers', function() {
             // Temporary disable error log
@@ -49,15 +64,6 @@ suite('Core', function() {
 
 
 suite('Blocks', function() {
-    setup(function() {
-        achilles = window.Achilles('/endpoint/');
-    });
-
-    teardown(function() {
-        $('body').empty();
-    });
-
-
     // DOM lookup helpers
     suite('Lookup', function() {
         test('Find a block', function() {
@@ -77,32 +83,24 @@ suite('Blocks', function() {
 
     // blocks:update remote action calling
     suite('Update', function() {
-        var called = 0;
-        var name, args, kwargs;
-        setup(function() {
-            // mock achilles.action
-            called = 0;
-            name = args = kwargs = null;
-
-            achilles.action = function(n, a, kw) {
-                called += 1;
-                name = n;
-                args = a;
-                kwargs = kw;
-            };
-        });
         test('Update one block', function() {
             $('body').append($('<div data-ablock="test"></div>'));
+
+            achilles.action = mock();
             achilles.update('test');
-            assert.equal(called, 1);
-            assert.equal(name, 'blocks:update');
+
+            assert.equal(achilles.action.called, 1);
+            assert.equal(achilles.action.args[0], 'blocks:update');
         });
 
         test('Update more than one block', function() {
             $('body').append($('<div data-ablock="test"></div>'));
             $('body').append($('<div data-ablock="test"></div>'));
+
+            achilles.action = mock();
             achilles.update('test');
-            assert.equal(called, 2);
+
+            assert.equal(achilles.action.called, 2);
         });
     });
 
