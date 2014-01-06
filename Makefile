@@ -5,15 +5,15 @@ sense: pep8 pyflakes test
 test: test_python test_js
 
 test_python:
-	PYTHONPATH=. DJANGO_SETTINGS_MODULE=test_settings  \
-    coverage run --source=achilles --branch            \
+	PYTHONPATH=. DJANGO_SETTINGS_MODULE=test_settings                \
+    coverage run --source=achilles --branch --omit=achilles/tests/*  \
                  `which django-admin.py` test
 	coverage report -m
 
 test_js:
 	COVERAGE_REPORT=1 mocha -u tdd -R spec \
                             achilles/tests/test_javascript.js --coverage
-	# Save lcov for later
+	@echo Writting coverage results to .coverage-js
 	@mocha -u tdd -R json-cov \
            achilles/tests/test_javascript.js --coverage > .coverage-js
 
