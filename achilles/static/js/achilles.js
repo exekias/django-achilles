@@ -189,20 +189,23 @@
             // Actions metadata
             achilles._actions = {
                 count: 0,
-                pending: {},
+                pending: Array(),
             }
         },
 
         process: function(achilles, actions) {
-            for (id in actions) {
-                var action = achilles._actions[id];
-                var result = actions[id];
+            for (action_id in actions) {
+                var action_deferred = achilles._actions.pending[action_id];
+                var result = actions[action_id];
                 if (result.error) {
-                    action.reject(result.error, result.message);
+                    action_deferred.reject(result.error, result.message);
                 }
                 else {
-                    action.resolve(result.value);
+                    action_deferred.resolve(result.value);
                 }
+
+                // Already processed, forget it:
+                delete achilles._actions.pending[action_id];
             }
         },
     };
@@ -212,7 +215,7 @@
         // Save action deferred to trigger it when the response comes
         var action_id = this._actions.count++;
         var action_deferred = $.Deferred();
-        this._actions[action_id] = action_deferred;
+        this._actions.pending[action_id] = action_deferred;
 
         // Launch the action
         this.transport.send({
@@ -222,7 +225,7 @@
             kwargs: kwargs
         }).error(function(jqXHR, textStatus) {
             // Reject in case of ajax error
-            action_deferred.reject(textStatus);
+            action_deferred.reject('TransportError', textStatus);
         });
 
         return action_deferred;

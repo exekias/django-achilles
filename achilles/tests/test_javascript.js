@@ -17,10 +17,11 @@ if (process.env.COVERAGE_REPORT) {
 
 
 // mock helper function
-function mock() {
+function mock(return_value) {
     var res = function() {
         res.called += 1;
         res.args = Array.prototype.slice.call(arguments);;
+        return return_value;
     }
     res.called = 0;
 
@@ -105,6 +106,19 @@ suite('Blocks', function() {
     });
 
 
+    // loadInto method
+    suite('Load', function() {
+        test('loadInto adds target attributes', function() {
+            $('body').append($('<div id="test"></div>'));
+
+            achilles.update = mock();
+            achilles.loadInto($('#test'), 'blockname');
+
+            assert.equal($('#test').attr('data-ablock'), 'blockname');
+            assert.equal(achilles.update.called, 1);
+        });
+    });
+
     // Server response processing
     suite('Process response', function() {
         test('Simple block update', function() {
@@ -116,6 +130,57 @@ suite('Blocks', function() {
             });
 
             assert.equal(achilles.block('test').html(), 'Hello');
+        });
+    });
+});
+
+
+suite('Actions', function() {
+
+
+    // Action calling
+    suite('Call', function() {
+        test('Send an action', function() {
+            achilles.transport.send = mock({error: function(){}});
+            action = achilles.action('test', [2, 'args'], { kw: 'args'});
+
+            assert.equal(achilles.transport.send.called, 1);
+        });
+
+        test('Process action results', function() {
+            achilles.transport.send = mock({error: function(){}});
+            action = achilles.action('test', [2, 'args'], { kw: 'args'});
+            action_id = achilles._actions.pending.indexOf(action);
+
+            var res = 0;
+            action.done(function (data) {
+                res = data;
+            });
+
+            actions = [];
+            actions[action_id] = {'value': 3};
+            achilles.processResponse({'actions': actions});
+
+            assert.equal(res, 3);
+        });
+
+        test('Process action error result', function() {
+            achilles.transport.send = mock({error: function(){}});
+            action = achilles.action('test', [2, 'args'], { kw: 'args'});
+            action_id = achilles._actions.pending.indexOf(action);
+
+            var exception, message;
+            action.fail(function (ex, msg) {
+                exception = ex;
+                message = msg;
+            });
+
+            actions = [];
+            actions[action_id] = {error: 'IndexError', message: 'sorry'};
+            achilles.processResponse({'actions': actions});
+
+            assert.equal(exception, 'IndexError');
+            assert.equal(message, 'sorry');
         });
     });
 });
