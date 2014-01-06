@@ -11,7 +11,7 @@ jsc.require(module, '../static/js/achilles.js');
 if (process.env.COVERAGE_REPORT) {
     process.on('exit', function () {
         jsc.coverage();
-        jsc.coverageDetail();
+        // jsc.coverageDetail();
     });
 }
 
