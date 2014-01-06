@@ -137,7 +137,6 @@ suite('Blocks', function() {
 
 suite('Actions', function() {
 
-
     // Action calling
     suite('Call', function() {
         test('Send an action', function() {
@@ -182,5 +181,24 @@ suite('Actions', function() {
             assert.equal(exception, 'IndexError');
             assert.equal(message, 'sorry');
         });
+    });
+});
+
+
+
+suite('Console', function() {
+    // Server response processing
+    test('Process server response', function() {
+        m = mock();
+        old_log = console.log; console.log = m;
+        achilles.processResponse({
+            'console': [
+                'Miau miau miau',
+            ]
+        });
+        console.log = old_log;
+
+        assert.equal(m.called, 1);
+        assert.equal(m.args[0], 'Miau miau miau');
     });
 });
