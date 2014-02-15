@@ -88,7 +88,7 @@ suite('Blocks', function() {
             $('body').append($('<div data-ablock="test"></div>'));
 
             achilles.action = mock();
-            achilles.update('test');
+            achilles.update(achilles.block('test'));
 
             assert.equal(achilles.action.called, 1);
             assert.equal(achilles.action.args[0], 'blocks:update');
@@ -99,7 +99,7 @@ suite('Blocks', function() {
             $('body').append($('<div data-ablock="test"></div>'));
 
             achilles.action = mock();
-            achilles.update('test');
+            achilles.update(achilles.blocks('test'));
 
             assert.equal(achilles.action.called, 2);
         });

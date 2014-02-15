@@ -58,12 +58,24 @@ class BlocksTests(TestCase):
 
     def test_render_lazy_block(self):
         @self.register.block(template_name="block_template.html")
-        def message(self, *args, **kwargs):
+        def message_lazy(self, *args, **kwargs):
             return {'message': 'foo'}
 
         out = Template(
             "{% load achilles %}"
-            "{% ablock_lazy 'message' %}").render(Context())
+            "{% ablock_lazy 'message_lazy' %}").render(Context())
 
-        self.assertEqual(out, '<div data-ablock="message" ' +
+        self.assertEqual(out, '<div data-ablock="message_lazy" ' +
+                              'data-lazy="true"></div>')
+
+    def test_render_noload_block(self):
+        @self.register.block(template_name="block_template.html")
+        def message_noload(self, *args, **kwargs):
+            return {'message': 'foo'}
+
+        out = Template(
+            "{% load achilles %}"
+            "{% ablock_noload 'message_noload' %}").render(Context())
+
+        self.assertEqual(out, '<div data-ablock="message_noload" ' +
                               'data-noload="true"></div>')
