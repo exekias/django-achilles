@@ -3,6 +3,15 @@ from django.template import Context
 
 from achilles import blocks
 
+def default_accessor(object, name):
+    """
+    Extract the given field from a model:
+
+    :param object: Object to read the field from
+    :param name: Field name to access on the object
+    """
+    return getattr(object, name)
+
 
 class Row(object):
     """
@@ -16,6 +25,7 @@ class Row(object):
         """
         self.table = table
         self.obj = obj
+        self.id = obj.id
 
     def cells(self):
         """
@@ -26,22 +36,6 @@ class Row(object):
 
     def __iter__(self):
         return self.cells()
-
-
-def default_accessor(object, name):
-    """
-    Extract the given field from an object in two different forms:
-
-        * For dicts it will return: object[name]
-        * For objects it will return: object.name
-
-    :param object: Object to read the field from
-    :param name: Field name to access on the object
-    """
-    try:
-        return object[name]
-    except KeyError:
-        return getattr(object, name)
 
 
 class Column(object):
@@ -73,8 +67,6 @@ class Cell(object):
     Cell object, item from a :class:`Row` showing the data
     for a :class:`Column`
     """
-    template_name = 'achilles/table-row.html'
-
     def __init__(self, table, column, obj):
         """
         :param table: Table this cell belongs to

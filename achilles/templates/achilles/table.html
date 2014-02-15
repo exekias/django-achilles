@@ -2,13 +2,13 @@
     <thead>
         <tr>
         {% for column in table.columns %}
-            <th>{{ column.render }}</th>
+            <th>{{ column.verbose_name }}</th>
         {% endfor %}
         </tr>
     </thead>
     <tbody>
         {% for row in table.rows %}
-        <tr class="{% cycle "even" "odd" %}">
+        <tr class="{% if row.id %}row-{{ row.id }} {% endif %}{% cycle "even" "odd" %}">
             {% for cell in row %}
                 <td>{{ cell.render }}</td>
             {% endfor %}
