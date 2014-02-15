@@ -5,7 +5,7 @@ var jsc = require('jscoverage');
 doc = jsdom('<html><body></body></html>');
 window = doc.createWindow();
 
-$ = require('jquery')(window);
+$ = require('jQuery').create(window);
 jsc.require(module, '../static/js/achilles.js');
 
 if (process.env.COVERAGE_REPORT) {
@@ -88,7 +88,7 @@ suite('Blocks', function() {
             $('body').append($('<div data-ablock="test"></div>'));
 
             achilles.action = mock();
-            achilles.update('test');
+            achilles.update(achilles.block('test'));
 
             assert.equal(achilles.action.called, 1);
             assert.equal(achilles.action.args[0], 'blocks:update');
@@ -99,7 +99,7 @@ suite('Blocks', function() {
             $('body').append($('<div data-ablock="test"></div>'));
 
             achilles.action = mock();
-            achilles.update('test');
+            achilles.update(achilles.blocks('test'));
 
             assert.equal(achilles.action.called, 2);
         });

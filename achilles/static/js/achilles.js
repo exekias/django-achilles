@@ -7,6 +7,8 @@
  */
 (function(window) {
 
+    // Make sure jquery is in the correct namespace
+    var $ = window.jQuery;
 
     /* CORE */
 
@@ -100,7 +102,7 @@
         if (document.cookie && document.cookie != '') {
             var cookies = document.cookie.split(';');
             for (var i = 0; i < cookies.length; i++) {
-                var cookie = jQuery.trim(cookies[i]);
+                var cookie = $.trim(cookies[i]);
                 // Does this cookie string begin with the name we want?
                 if (cookie.substring(0, name.length + 1) == (name + '=')) {
                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
@@ -110,73 +112,6 @@
         }
         return cookieValue;
     }
-
-
-
-    /* BLOCKS */
-
-    // Register the response controller
-    var blocks_controller = {
-        init: function(achilles) {
-            achilles.block_updaters = {
-                HTML: function (block, data) {
-                    block.html(data)
-                },
-            };
-        },
-
-        process: function(achilles, data) {
-            for (b in data) {
-                var block = data[b];
-                var updater = achilles.block_updaters[block.updater || 'HTML'];
-                var blocks = achilles.blocks(block.name, block.args, block.kwargs);
-                updater(blocks, block.data);
-            }
-        },
-    };
-
-    // Look for blocks matching the given criteria
-    Achilles.fn.blocks = function(name, args, kwargs) {
-        var blocks = $('[data-ablock]');
-
-        if (name) blocks = blocks.filter('[data-ablock="'+name+'"]');
-        // TODO filter also by args + kwargs
-
-        return blocks;
-    };
-
-    // Look for the block matching the given criteria
-    Achilles.fn.block = function(name, args, kwargs) {
-        return this.blocks(name, args, kwargs).first();
-    };
-
-    // Update the blocks matching the given criteria
-    Achilles.fn.update = function(block, name, args, kwargs) {
-        var blocks = this.blocks(name, args, kwargs);
-        var _achilles = this;
-
-        blocks.each(function(block) {
-            var name = $(this).attr('data-ablock');
-            var args = $(this).attr('data-ablock-args') || [];
-            var kargs = $(this).attr('data-ablock-kargs') || {};
-            _achilles.action('blocks:update', [name].concat(args), kwargs)
-        });
-    };
-
-    // Load a block into the given element, if the given element is not a block,
-    // this method will convert it to one
-    Achilles.fn.loadInto = function(block, name, args, kwargs) {
-        // Prepare the element wrapper
-        block.attr('data-ablock', name);
-        if (args) block.attr('data-args', args);
-        if (kwargs) block.attr('data-kwargs', kwargs);
-
-        // Call for update
-        this.update(name, args, kwargs);
-    };
-
-    // Register the controller
-    Achilles.fn.registerController('blocks', blocks_controller);
 
 
 
@@ -233,6 +168,75 @@
 
     // Register the controller
     Achilles.fn.registerController('actions', actions_controller);
+
+
+
+    /* BLOCKS */
+
+    // Register the response controller
+    var blocks_controller = {
+        init: function(achilles) {
+            achilles.block_updaters = {
+                HTML: function (block, data) {
+                    block.html(data)
+                },
+            };
+
+            // load lazy blocks
+            var lazyblocks = $('[data-ablock][data-lazy]');
+            achilles.update(lazyblocks);
+        },
+
+        process: function(achilles, data) {
+            for (b in data) {
+                var block = data[b];
+                var updater = achilles.block_updaters[block.updater || 'HTML'];
+                var blocks = achilles.blocks(block.name, block.args, block.kwargs);
+                updater(blocks, block.data);
+            }
+        },
+    };
+
+    // Look for blocks matching the given criteria
+    Achilles.fn.blocks = function(name, args, kwargs) {
+        var blocks = $('[data-ablock]');
+
+        if (name) blocks = blocks.filter('[data-ablock="'+name+'"]');
+        // TODO filter also by args + kwargs
+
+        return blocks;
+    };
+
+    // Look for the block matching the given criteria
+    Achilles.fn.block = function(name, args, kwargs) {
+        return this.blocks(name, args, kwargs).first();
+    };
+
+    // Update the given blocks
+    Achilles.fn.update = function(blocks) {
+        var _achilles = this;
+        blocks.each(function(block) {
+            var name = $(this).attr('data-ablock');
+            var args = $(this).attr('data-ablock-args') || [];
+            var kwargs = $(this).attr('data-ablock-kwargs') || {};
+            _achilles.action('blocks:update', [name].concat(args), kwargs)
+        });
+    };
+
+    // Load a block into the given element, if the given element is not a block,
+    // this method will convert it to one
+    Achilles.fn.loadInto = function(block, name, args, kwargs) {
+        // Prepare the element wrapper
+        block.attr('data-ablock', name);
+        if (args) block.attr('data-args', args);
+        if (kwargs) block.attr('data-kwargs', kwargs);
+
+        // Call for update
+        this.update(name, args, kwargs);
+    };
+
+    // Register the controller
+    Achilles.fn.registerController('blocks', blocks_controller);
 
 
     /* LOGS */

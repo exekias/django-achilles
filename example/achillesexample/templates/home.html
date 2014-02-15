@@ -8,15 +8,18 @@
     {% csrf_token %}
     <div>
         <h1>Blocks</h1>
-        This is a block with load count:
+        <h3>Dynamic content</h3>
         {% ablock 'example:counter' %}
 
         <a href="javascript:achilles.action('blocks:update', ['example:counter'])">Update!</a>
+
+        <h3>Lazy load</h3>
+        {% ablock_lazy 'example:slow' %}
     </div>
     <div>
         <h1>Actions</h1>
         <div>
-            We have remote action calls with return values!
+            <h3>Arguments and return values</h3>
             <input type="text" id="ma" size="4" value="8" /> x
             <input type="text" id="mb" size="4" value="7" /> =
             <input type="text" id="mres" size="7" value="?" disabled="disabled" />
@@ -40,7 +43,7 @@
 
         </div>
         <div>
-            And error management :)
+            <h3>Error management</h3>
 
             <input type="text" id="da" size="4" value="10" /> /
             <input type="text" id="db" size="4" value="0" /> =
@@ -70,7 +73,6 @@
             {% ablock 'example:mytable' %}
         </div>
     </div>
-
 
 
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
