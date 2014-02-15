@@ -5,7 +5,7 @@ var jsc = require('jscoverage');
 doc = jsdom('<html><body></body></html>');
 window = doc.createWindow();
 
-$ = require('jquery')(window);
+$ = require('jQuery').create(window);
 jsc.require(module, '../static/js/achilles.js');
 
 if (process.env.COVERAGE_REPORT) {
