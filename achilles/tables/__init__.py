@@ -3,6 +3,7 @@ from django.template import Context
 
 from achilles import blocks
 
+
 def default_accessor(object, name):
     """
     Extract the given field from a model:

@@ -1,5 +1,3 @@
-import os
-
 from django.test import TestCase
 from django.template import Template, Context
 from mock import MagicMock
@@ -26,7 +24,7 @@ class TablesTests(TestCase):
 
         # mocked model
         self.person = MagicMock()
-        self.person.objects.all.return_value = [ self.p1, self.p2 ]
+        self.person.objects.all.return_value = [self.p1, self.p2]
 
         # table
         @self.register.block()
@@ -38,7 +36,8 @@ class TablesTests(TestCase):
 
     def test_access_cols(self):
         table = self.register.get('People')()
-        self.assertEqual([c.name for c in table.columns()], ['first_name', 'last_name'])
+        self.assertEqual([c.name for c in table.columns()],
+                         ['first_name', 'last_name'])
 
     def test_render_col(self):
         table = self.register.get('People')()
@@ -53,7 +52,8 @@ class TablesTests(TestCase):
         table = self.register.get('People')()
         row2 = list(table.rows())[1]
 
-        self.assertEqual([c.render() for c in row2.cells()], ['Frida', 'Kahlo'])
+        self.assertEqual([c.render() for c in row2.cells()],
+                         ['Frida', 'Kahlo'])
 
     def test_render_table(self):
         out = Template(
