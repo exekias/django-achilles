@@ -3,3 +3,4 @@ coveralls==0.3
 django-nose
 pep8
 pyflakes
+mock
