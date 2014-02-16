@@ -2,7 +2,7 @@
     <thead>
         <tr>
         {% for column in table.columns %}
-            <th>{{ column.verbose_name }}</th>
+            <th>{{ column.verbose_name|safe }}</th>
         {% endfor %}
         </tr>
     </thead>
@@ -10,11 +10,11 @@
         {% for row in table.rows %}
         <tr class="{% if row.id %}row-{{ row.id }} {% endif %}{% cycle "even" "odd" %}">
             {% for cell in row %}
-                <td>{{ cell.render }}</td>
+                <td>{{ cell.render|safe }}</td>
             {% endfor %}
         </tr>
         {% empty %}
-        <tr><td colspan="{{ table.columns|length }}">{{ table.empty_text }}</td></tr>
+        <tr><td colspan="{{ table.columns|length }}">{{ table.empty_text|safe }}</td></tr>
         {% endfor %}
     </tbody>
     <tfoot></tfoot>
