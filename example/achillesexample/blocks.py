@@ -25,7 +25,9 @@ def slow():
 @register.block('mytable')
 class Table(tables.Table):
 
-    a = tables.Column('first_name')
-    b = tables.Column('last_name')
+    first_name = tables.Column()
+    last_name = tables.Column()
+    call_example = tables.ActionColumn(action='example:counter',
+                                       verbose_name='miau')
 
     model = Person

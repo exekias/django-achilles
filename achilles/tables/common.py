@@ -48,10 +48,28 @@ class Cell(object):
         return self.column.render(self.obj)
 
 
+class TableMeta(type):
+    """
+    Table metaclass, it calls contribute_to_class to column fields during
+    class creation
+    """
+    def __new__(meta, name, bases, attrs):
+        cls = super(TableMeta, meta).__new__(meta, name, bases, attrs)
+
+        for column_name, column in attrs.items():
+            if not isinstance(column, Column):
+                continue
+            column.contribute_to_class(cls, column_name)
+
+        return cls
+
+
 class Table(blocks.Block):
     """
     Table block, displays a table of elements
     """
+    __metaclass__ = TableMeta
+
     #: Template file
     template_name = 'achilles/table.html'
 
