@@ -27,7 +27,7 @@ class Table(tables.Table):
 
     first_name = tables.Column()
     last_name = tables.Column()
-    call_example = tables.ActionColumn(action='example:counter',
+    call_example = tables.ActionColumn(action='example:miau_person',
                                        verbose_name='miau')
 
     model = Person
