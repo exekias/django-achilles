@@ -90,6 +90,16 @@ class Table(blocks.Block):
             raise NotImplementedError('You should implement this method or '
                                       'define model field')
 
+    def get_object(self, id):
+        """
+        Return a table object from its unique object id
+        """
+        if self.model:
+            return self.model.objects.get(id=id)
+        else:
+            raise NotImplementedError('You should implement this method or '
+                                      'define model field')
+
     def rows(self):
         """
         Generator over :class:`Row` elements for each item in object list

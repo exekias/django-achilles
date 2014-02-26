@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.template import Template, Context
-from mock import MagicMock
+from mock import Mock, MagicMock
 
 from achilles import blocks, tables
 
@@ -12,15 +12,8 @@ class TablesTests(TestCase):
         cls.register = blocks.Library('tables')
 
     def setUp(self):
-        self.p1 = MagicMock()
-        self.p1.id = 1
-        self.p1.first_name = 'Diego'
-        self.p1.last_name = 'Rivera'
-
-        self.p2 = MagicMock()
-        self.p2.id = 2
-        self.p2.first_name = 'Frida'
-        self.p2.last_name = 'Kahlo'
+        self.p1 = Mock(id=1, first_name='Diego', last_name='Rivera')
+        self.p2 = Mock(id=2, first_name='Frida', last_name='Kahlo')
 
         # mocked model
         self.person = MagicMock()
@@ -65,3 +58,14 @@ class TablesTests(TestCase):
 
         # Cell row
         self.assertTrue("Kahlo" in out)
+
+    def test_action_column(self):
+        column = tables.ActionColumn('foobar:action', verbose_name='doit!')
+        column.table = Mock(register_name='foobar:table')
+
+        obj = Mock(id=2)
+        column_text = ("<a href=\"javascript:achilles.action"
+                       "('tables:call_action', ['foobar:table', "
+                       "'foobar:action', '2'])\">doit!</a>")
+
+        self.assertEqual(column.render(obj), column_text)

@@ -47,8 +47,8 @@ class Column(object):
 class ActionColumn(Column):
     """
     Action calling column, it will show a button that will can
-    the given action on click, the action will get the item
-    in the row as parameter
+    the given action on click, the action will get the the table
+    and object in the row as arguments
     """
     def __init__(self, action, *args, **kwargs):
         super(ActionColumn, self).__init__(*args, **kwargs)
@@ -57,11 +57,22 @@ class ActionColumn(Column):
     def render(self, obj):
         return ("<a href=\"javascript:achilles.action('tables:call_action', " +
                 "['%s', '%s', '%s'])\">%s</a>") % (self.table.register_name,
-                                                   self.name, obj.id,
+                                                   self.action, obj.id,
                                                    self.verbose_name)
 
 
 @register.action
 def call_action(request, table, action, id):
+    """
+    Call table action on the given row
+
+    :param request: The client request
+    :param table: Name of the table calling this
+    :param action: Name of the action to call
+    :param id: Id of the object
+    """
     context = RequestContext(request, {})
     table = blocks.get(table, context)
+    obj = table.get_object(id)
+    action = actions.get(action)
+    action(request, table, obj)
