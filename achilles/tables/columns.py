@@ -40,14 +40,20 @@ class Column(object):
 
     def render(self, obj):
         """
+        Dump cell for the given object
+        """
+        if self.visible(obj):
+            return self.content(obj)
+        else:
+            return ''
+
+    def content(self, obj):
+        """
         Render column value for the given object
 
         :param obj: Object to read the value from
         """
-        if self.visible(obj):
-            return str(self.accessor(obj, self.name))
-        else:
-            return ''
+        return str(self.accessor(obj, self.name))
 
 
 class MergeColumn(Column):
@@ -68,7 +74,7 @@ class MergeColumn(Column):
         for (name, column) in self.columns:
             column.contribute_to_class(table, name)
 
-    def render(self, obj):
+    def content(self, obj):
         return ' '.join([c.render(obj) for (n, c) in self.columns])
 
 
@@ -82,10 +88,12 @@ class ActionColumn(Column):
         super(ActionColumn, self).__init__(*args, **kwargs)
         self.action = action
 
-    def render(self, obj):
+    def content(self, obj):
+        id_field = self.table.id_field
         return ("<a href=\"javascript:achilles.action('tables:call_action', " +
                 "['%s', '%s', '%s'])\">%s</a>") % (self.table.register_name,
-                                                   self.action, obj.id,
+                                                   self.action,
+                                                   getattr(obj, id_field),
                                                    self.verbose_name)
 
 

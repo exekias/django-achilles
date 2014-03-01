@@ -61,7 +61,7 @@ class TablesTests(TestCase):
 
     def test_action_column(self):
         column = tables.ActionColumn('foobar:action', verbose_name='doit!')
-        column.table = Mock(register_name='foobar:table')
+        column.table = Mock(register_name='foobar:table', id_field='id')
 
         obj = Mock(id=2)
         column_text = ("<a href=\"javascript:achilles.action"
