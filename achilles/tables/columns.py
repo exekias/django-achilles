@@ -22,13 +22,16 @@ class Column(object):
     table
     """
     def __init__(self, verbose_name=None,
-                 accessor=default_accessor):
+                 accessor=default_accessor,
+                 visible=lambda x: True):
         """
         :param verbose_name: Column human-readable name
         :param accessor: Function to access get data from the object
+        :param visible: Function giving visibility flag for the given row
         """
         self.verbose_name = verbose_name
         self.accessor = accessor
+        self.visible = visible
 
     def contribute_to_class(self, table, name):
         self.name = name
@@ -41,7 +44,10 @@ class Column(object):
 
         :param obj: Object to read the value from
         """
-        return str(self.accessor(obj, self.name))
+        if self.visible(obj):
+            return str(self.accessor(obj, self.name))
+        else:
+            return ''
 
 
 class ActionColumn(Column):
