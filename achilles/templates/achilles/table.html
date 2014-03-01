@@ -2,7 +2,7 @@
     <thead>
         <tr>
         {% for column in table.columns %}
-            <th>{{ column.verbose_name|safe }}</th>
+            <th class="col-{{ column.name }}">{{ column.verbose_name|safe }}</th>
         {% endfor %}
         </tr>
     </thead>

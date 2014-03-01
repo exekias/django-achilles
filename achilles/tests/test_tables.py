@@ -54,7 +54,7 @@ class TablesTests(TestCase):
             "{% ablock 'tables:People' %}").render(Context())
 
         # headers
-        self.assertEqual(out.count('<th>'), 2)
+        self.assertEqual(out.count('<th '), 2)
 
         # Cell row
         self.assertTrue("Kahlo" in out)

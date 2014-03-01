@@ -50,6 +50,28 @@ class Column(object):
             return ''
 
 
+class MergeColumn(Column):
+    """
+    Merge some columns under the same cell
+    """
+    def __init__(self, columns, *args, **kwargs):
+        """
+        :param columns: Tuple of name, column pairs for all merged
+            columns to show
+        """
+        super(MergeColumn, self).__init__(*args, **kwargs)
+        self.columns = columns
+
+    def contribute_to_class(self, table, name):
+        super(MergeColumn, self).contribute_to_class(table, name)
+
+        for (name, column) in self.columns:
+            column.contribute_to_class(table, name)
+
+    def render(self, obj):
+        return ' '.join([c.render(obj) for (n, c) in self.columns])
+
+
 class ActionColumn(Column):
     """
     Action calling column, it will show a button that will can

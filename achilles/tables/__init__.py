@@ -3,4 +3,5 @@ from . columns import Column, ActionColumn
 
 __all__ = ["Table",
            "Column",
+           "MergeColumn",
            "ActionColumn"]
