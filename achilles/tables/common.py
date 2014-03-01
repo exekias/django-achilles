@@ -16,7 +16,7 @@ class Row(object):
         """
         self.table = table
         self.obj = obj
-        self.id = obj.id
+        self.id = getattr(obj, table.id_field)
 
     def cells(self):
         """
@@ -78,6 +78,9 @@ class Table(blocks.Block):
 
     #: Django model to read the objects from
     model = None
+
+    #: ID field for non-model objects
+    id_field = 'id'
 
     def __init__(self, context=Context()):
         context.update({'table': self})
