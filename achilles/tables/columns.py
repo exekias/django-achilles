@@ -90,17 +90,17 @@ class ActionColumn(Column):
     the given action on click, the action will get the the table
     and object in the row as arguments
     """
-    def __init__(self, action, *args, **kwargs):
+    def __init__(self, action, classes='', *args, **kwargs):
         super(ActionColumn, self).__init__(*args, **kwargs)
         self.action = action
+        self.classes = classes
 
     def content(self, obj):
         id_field = self.table.id_field
-        return ("<a href=\"javascript:achilles.action('tables:call_action', " +
-                "['%s', '%s', '%s'])\">%s</a>") % (self.table.register_name,
-                                                   self.action,
-                                                   getattr(obj, id_field),
-                                                   self.verbose_name)
+        return ("<a class=\"%s\" href=\"javascript:achilles.action("
+                "'tables:call_action', ['%s', '%s', '%s'])\">%s</a>") % (
+            self.classes, self.table.register_name, self.action,
+            getattr(obj, id_field), self.verbose_name)
 
 
 @register.action

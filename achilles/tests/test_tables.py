@@ -64,7 +64,7 @@ class TablesTests(TestCase):
         column.table = Mock(register_name='foobar:table', id_field='id')
 
         obj = Mock(id=2)
-        column_text = ("<a href=\"javascript:achilles.action"
+        column_text = ("<a class=\"\" href=\"javascript:achilles.action"
                        "('tables:call_action', ['foobar:table', "
                        "'foobar:action', '2'])\">doit!</a>")
 

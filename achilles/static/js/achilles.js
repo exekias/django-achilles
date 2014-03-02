@@ -274,6 +274,21 @@
     Achilles.fn.registerController('console', console_controller);
 
 
+    /* REDIRECT */
+
+    var redirect_controller = {
+
+        process: function(achilles, redirect) {
+            if (redirect.url) {
+                window.location.href = redirect.url;
+            }
+        },
+    };
+
+    // Register the controller
+    Achilles.fn.registerController('redirect', redirect_controller);
+
+
     // Expose achilles
     window.Achilles = Achilles;
 })(window);
