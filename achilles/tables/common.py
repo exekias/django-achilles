@@ -114,7 +114,12 @@ class Table(blocks.Block):
         """
         List of :class:`Column` elements defined for this table
         """
+        cols = []
         for c in dir(self):
             c = getattr(self, c)
             if isinstance(c, Column):
-                yield c
+                cols.append(c)
+
+        # We are not caching this because column number should be low enough
+        cols.sort(key=lambda col: col.creation_counter)
+        return cols

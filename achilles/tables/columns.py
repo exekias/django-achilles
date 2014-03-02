@@ -21,6 +21,9 @@ class Column(object):
     Table column, extract information from objects and render it whitin the
     table
     """
+    # Creation counter used to retrieve original column order
+    creation_counter = 0
+
     def __init__(self, verbose_name=None,
                  accessor=default_accessor,
                  visible=lambda x: True):
@@ -29,6 +32,9 @@ class Column(object):
         :param accessor: Function to access get data from the object
         :param visible: Function giving visibility flag for the given row
         """
+        self.creation_counter = Column.creation_counter
+        Column.creation_counter += 1
+
         self.verbose_name = verbose_name
         self.accessor = accessor
         self.visible = visible
