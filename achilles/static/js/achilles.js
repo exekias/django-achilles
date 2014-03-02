@@ -134,10 +134,13 @@
                 var action_deferred = achilles._actions.pending[action_id];
                 var result = actions[action_id];
                 if (result.error) {
-                    action_deferred.reject(result.error, result.message);
+                    action_deferred.reject(result.error,
+                                           result.message,
+                                           result.trace);
+
                     for (cb in achilles._actions.error_observers) {
                         cb = achilles._actions.error_observers[cb];
-                        cb(result.error, result.message);
+                        cb(result.error, result.message, result.trace);
                     }
                 }
                 else {

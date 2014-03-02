@@ -1,9 +1,14 @@
 from django.conf import settings
-import django.dispatch
-
 from importlib import import_module
 
 from achilles.common import BaseLibrary, achilles_data
+
+import django.dispatch
+import logging
+import traceback
+
+
+logger = logging.getLogger(__name__)
 
 
 class Library(BaseLibrary):
@@ -79,6 +84,10 @@ def run_actions(request, actions):
                 'error': e.__class__.__name__,
                 'message': str(e),
             }
+            if settings.DEBUG:
+                data[a['id']]['trace'] = traceback.format_exc()
+
+            logger.exception("Error on %s action" % name)
 
     post_actions_call.send(request, request=request)
 
