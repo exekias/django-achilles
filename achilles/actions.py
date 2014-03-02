@@ -1,4 +1,6 @@
 from django.conf import settings
+import django.dispatch
+
 from importlib import import_module
 
 from achilles.common import BaseLibrary, achilles_data
@@ -47,10 +49,19 @@ def get(name):
     return Library.get_global(name)
 
 
+#: Signal dispatched before executing client sent actions
+pre_actions_call = django.dispatch.Signal(providing_args=['request'])
+
+#: Signal dispatched after executing client sent actions
+post_actions_call = django.dispatch.Signal(providing_args=['request'])
+
+
 def run_actions(request, actions):
     """
     Run the given list of actions sent by the client
     """
+    pre_actions_call.send(request, request=request)
+
     data = achilles_data(request, 'actions', {})
     for a in actions:
         name = a['name']
@@ -68,6 +79,8 @@ def run_actions(request, actions):
                 'error': e.__class__.__name__,
                 'message': str(e),
             }
+
+    post_actions_call.send(request, request=request)
 
 
 def render(request):

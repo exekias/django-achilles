@@ -1,6 +1,7 @@
-from achilles import blocks
+from achilles import blocks, tables
 from time import sleep
 
+from models import Person
 
 register = blocks.Library('example')
 
@@ -20,3 +21,13 @@ def slow():
     return {
         'message':'This block was loaded after page was loaded!',
     }
+
+@register.block('mytable')
+class Table(tables.Table):
+
+    first_name = tables.Column(verbose_name='First name')
+    last_name = tables.Column(verbose_name='First name')
+    call_example = tables.ActionColumn(action='example:miau_person',
+                                       verbose_name='Miauify')
+
+    model = Person

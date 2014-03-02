@@ -1,5 +1,6 @@
 coverage
-coveralls==0.3
+coveralls
 django-nose
 pep8
 pyflakes
+mock

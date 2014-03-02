@@ -98,6 +98,7 @@ class BaseLibrary(object):
                              "'%s' is already registered" % namespace)
 
         type(self).registers[namespace] = self
+        self.namespace = namespace
         self.items = {}
 
     def get(self, name):
@@ -135,5 +136,6 @@ class BaseLibrary(object):
 
     def _register(self, func, name=None):
         name = name or getattr(func, '_decorated_function', func).__name__
+        func.register_name = ':'.join([self.namespace or '', name])
         self.items[name] = func
         return func

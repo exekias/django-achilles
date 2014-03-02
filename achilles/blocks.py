@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.template import Context
+from django.template import Context, RequestContext
 from django.template.loader import get_template
 from django.utils.log import getLogger
 
@@ -156,7 +156,8 @@ def update(request, name, *args, **kwargs):
     :param request: Django request object that is being served
     :param name: Fully namespaced block name
     """
-    block = get(name)
+    context = RequestContext(request, {})
+    block = get(name, context)
     blocks = achilles_data(request, 'blocks', [])
     blocks.append({
         'name': name,
