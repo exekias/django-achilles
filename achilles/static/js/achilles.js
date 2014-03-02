@@ -125,6 +125,7 @@
             achilles._actions = {
                 count: 0,
                 pending: Array(),
+                error_observers: Array(),
             }
         },
 
@@ -134,6 +135,10 @@
                 var result = actions[action_id];
                 if (result.error) {
                     action_deferred.reject(result.error, result.message);
+                    for (cb in achilles._actions.error_observers) {
+                        cb = achilles._actions.error_observers[cb];
+                        cb(result.error, result.message);
+                    }
                 }
                 else {
                     action_deferred.resolve(result.value);
@@ -144,6 +149,11 @@
             }
         },
     };
+
+    // Register an error observer
+    Achilles.fn.onError = function(callback) {
+        this._actions.error_observers.push(callback);
+    }
 
     // Remote action call
     Achilles.fn.action = function(name, args, kwargs) {
@@ -161,6 +171,10 @@
         }).error(function(jqXHR, textStatus) {
             // Reject in case of ajax error
             action_deferred.reject('TransportError', textStatus);
+            for (cb in achilles._actions.error_observers) {
+                cb = achilles._actions.error_observers[cb];
+                cb('TransportError', textStatus);
+            }
         });
 
         return action_deferred;
