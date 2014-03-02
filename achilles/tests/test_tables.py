@@ -34,7 +34,7 @@ class TablesTests(TestCase):
 
     def test_render_col(self):
         table = self.register.get('People')()
-        column = next(table.columns())
+        column = table.columns()[0]
         self.assertEqual(column.render(self.p1), 'Diego')
 
     def test_access_rows(self):
