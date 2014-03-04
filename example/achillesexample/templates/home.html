@@ -3,10 +3,18 @@
 <html>
   <head>
     <title>Django Achilles demo</title>
+    <style type="text/css">
+        @media all and (min-width: 768px) {
+            .sec {
+                width: 50%;
+                float: left;
+            }
+        }
+    </style>
   </head>
   <body>
     {% csrf_token %}
-    <div>
+    <div class="sec">
         <h1>Blocks</h1>
         <h3>Dynamic content</h3>
         {% ablock 'example:counter' %}
@@ -16,7 +24,7 @@
         <h3>Lazy load</h3>
         {% ablock_lazy 'example:slow' %}
     </div>
-    <div>
+    <div class="sec">
         <h1>Actions</h1>
         <div>
             <h3>Arguments and return values</h3>
@@ -66,11 +74,17 @@
             </script>
             <a href="javascript:divide()">Calculate!</a>
         </div>
-
-
+    </div>
+    <div class="sec">
         <h1>Tables</h1>
         <div>
             {% ablock 'example:mytable' %}
+        </div>
+    </div>
+    <div class="sec">
+        <h1>Forms</h1>
+        <div>
+            {% ablock 'example:myform' %}
         </div>
     </div>
 

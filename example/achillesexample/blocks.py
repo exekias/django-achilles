@@ -1,7 +1,9 @@
-from achilles import blocks, tables
+from django import forms as djforms
+
+from achilles import blocks, forms, tables
 from time import sleep
 
-from models import Person
+from .models import Person
 
 register = blocks.Library('example')
 
@@ -31,3 +33,13 @@ class Table(tables.Table):
                                        verbose_name='Miauify')
 
     model = Person
+
+class MyForm(djforms.Form):
+    subject = djforms.CharField(max_length=100)
+    message = djforms.CharField()
+    sender = djforms.EmailField()
+    cc_myself = djforms.BooleanField(required=False)
+
+@register.block('myform')
+class Form(forms.Form):
+    form_class = MyForm
