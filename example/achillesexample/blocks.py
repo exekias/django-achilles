@@ -35,11 +35,16 @@ class Table(tables.Table):
     model = Person
 
 class MyForm(djforms.Form):
-    subject = djforms.CharField(max_length=100)
-    message = djforms.CharField()
-    sender = djforms.EmailField()
-    cc_myself = djforms.BooleanField(required=False)
+    first_name = djforms.CharField()
+    last_name = djforms.CharField()
 
 @register.block('myform')
 class Form(forms.Form):
     form_class = MyForm
+
+    def form_valid(self, request, form):
+        Person.objects.get_or_create(**form.cleaned_data)
+        blocks.update(request, 'example:mytable')
+
+    def form_invalid(self, request, form):
+        print "SHIT"

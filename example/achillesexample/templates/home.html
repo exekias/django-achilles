@@ -85,11 +85,19 @@
         <h1>Forms</h1>
         <div>
             {% ablock 'example:myform' %}
+            <script type="text/javascript">
+                function send(name) {
+                    form = achilles.block(name).find('form');
+                    data = form.serialize();
+                    achilles.action('forms:send', [name, data]);
+                }
+            </script>
+            <a href="javascript:send('example:myform')">Send form!</a>
         </div>
     </div>
 
 
-    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="/static/js/jquery.min.js"></script>
     {% achilles_js %}
   </body>
 </html>
