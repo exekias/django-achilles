@@ -19,3 +19,8 @@ def miau_person(request, table, person):
     person.last_name = 'Miau ' + person.last_name
     person.save()
     blocks.update(request, 'example:mytable')
+
+@register.action
+def delete_person(request, table, person):
+    person.delete()
+    blocks.update(request, 'example:mytable')

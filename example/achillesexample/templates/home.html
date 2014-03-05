@@ -42,8 +42,9 @@
                         $('#merror').html('');
                         $('#mres').val(res);
                     })
-                    .fail(function (error, message) {
+                    .fail(function (error, message, trace) {
                         $('#merror').html('ERROR: ' + message);
+                        console.log(trace);
                     });
                 }
             </script>
@@ -67,8 +68,9 @@
                         $('#derror').html('');
                         $('#dres').val(res);
                     })
-                    .fail(function (error, message) {
+                    .fail(function (error, message, trace) {
                         $('#derror').html('ERROR: ' + message);
+                        console.log(trace);
                     });
                 }
             </script>
