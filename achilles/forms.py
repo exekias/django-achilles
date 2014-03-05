@@ -1,6 +1,10 @@
 from django.template import Context
+from django.http.request import QueryDict
 
-from achilles import blocks
+from achilles import blocks, actions
+
+
+register = actions.Library('forms')
 
 
 class Form(blocks.Block):
@@ -20,7 +24,7 @@ class Form(blocks.Block):
         return self.initial.copy()
 
     def get_form(self, form_data=None, *args, **kwargs):
-        return self.form_class(**self.get_form_kwargs())
+        return self.form_class(data=form_data, **self.get_form_kwargs())
 
     def get_form_kwargs(self, form_data=None, *args, **kwargs):
         kwargs = {
@@ -37,8 +41,28 @@ class Form(blocks.Block):
         })
         return context
 
-    def form_valid(self, form):
-        raise NotImplemented("You should implement this method")
+    def form_valid(self, request, form):
+        raise NotImplementedError("You should implement this method")
 
-    def form_invalid(self, form):
-        raise NotImplemented("You should implement this method")
+    def form_invalid(self, request, form):
+        raise NotImplementedError("You should implement this method")
+
+
+@register.action
+def send(request, form, data):
+    """
+    Validate a form and call the proper callback Form.form_valid
+    or Form.form_invalid
+
+    :param request: Request object
+    :param form: Form block name
+    :param data: Serialized form data
+    """
+    block = blocks.get(form)
+    data = QueryDict(data, encoding=request.encoding)
+    form = block.get_form(form_data=data)
+
+    if form.is_valid():
+        block.form_valid(request, form)
+    else:
+        block.form_invalid(request, form)
