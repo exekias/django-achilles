@@ -137,6 +137,18 @@ class Block(object):
         """
         return self.context
 
+    def update(self, request, *args, **kwargs):
+        """
+        Render and send the update of block within the given request
+        """
+        blocks = achilles_data(request, 'blocks', [])
+        blocks.append({
+            'name': self.register_name,
+            'args': args,
+            'kwargs': kwargs,
+            'data': self.render(*args, **kwargs),
+        })
+
 
 register = ActionsLibrary('blocks')
 
@@ -158,13 +170,7 @@ def update(request, name, *args, **kwargs):
     """
     context = RequestContext(request, {})
     block = get(name, context)
-    blocks = achilles_data(request, 'blocks', [])
-    blocks.append({
-        'name': name,
-        'args': args,
-        'kwargs': kwargs,
-        'data': block.render(*args, **kwargs),
-    })
+    block.update(request, *args, **kwargs)
 
 
 def render(request):
