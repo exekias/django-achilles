@@ -47,6 +47,3 @@ class Form(forms.Form):
     def form_valid(self, request, form):
         Person.objects.get_or_create(**form.cleaned_data)
         blocks.update(request, 'example:mytable')
-
-    def form_invalid(self, request, form):
-        print "SHIT"
