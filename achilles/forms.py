@@ -19,12 +19,16 @@ class Form(blocks.Block):
 
     def __init__(self, context=Context()):
         super(Form, self).__init__(context)
+        self._form = None
 
     def get_initial(self):
         return self.initial.copy()
 
     def get_form(self, form_data=None, *args, **kwargs):
-        return self.form_class(data=form_data, **self.get_form_kwargs())
+        if not self._form:
+            self._form = self.form_class(data=form_data,
+                                         **self.get_form_kwargs())
+        return self._form
 
     def get_form_kwargs(self, form_data=None, *args, **kwargs):
         kwargs = {
@@ -45,7 +49,10 @@ class Form(blocks.Block):
         raise NotImplementedError("You should implement this method")
 
     def form_invalid(self, request, form):
-        raise NotImplementedError("You should implement this method")
+        """
+        Update the form with error messages
+        """
+        self.update(request)
 
 
 @register.action
