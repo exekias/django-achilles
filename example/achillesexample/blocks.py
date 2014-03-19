@@ -1,7 +1,9 @@
-from achilles import blocks, tables
+from django import forms as djforms
+
+from achilles import blocks, forms, tables
 from time import sleep
 
-from models import Person
+from .models import Person
 
 register = blocks.Library('example')
 
@@ -17,9 +19,16 @@ def counter():
 
 @register.block(template_name='blocks/message.html')
 def slow():
-    sleep(1)
+    sleep(2)
     return {
         'message':'This block was loaded after page was loaded!',
+    }
+
+@register.block(template_name='blocks/message.html')
+def with_args(index):
+    MSG = { x:'This is the %s block' % x.upper() for x in ('a', 'b', 'c') }
+    return {
+        'message':MSG[index],
     }
 
 @register.block('mytable')
@@ -33,3 +42,15 @@ class Table(tables.Table):
                                         verbose_name='Delete')
 
     model = Person
+
+class MyForm(djforms.Form):
+    first_name = djforms.CharField()
+    last_name = djforms.CharField()
+
+@register.block('myform')
+class Form(forms.Form):
+    form_class = MyForm
+
+    def form_valid(self, request, form):
+        Person.objects.get_or_create(**form.cleaned_data)
+        blocks.update(request, 'example:mytable')

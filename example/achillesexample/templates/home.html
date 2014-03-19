@@ -3,20 +3,33 @@
 <html>
   <head>
     <title>Django Achilles demo</title>
+    <style type="text/css">
+        @media all and (min-width: 768px) {
+            .sec {
+                width: 50%;
+                float: left;
+            }
+        }
+    </style>
   </head>
   <body>
     {% csrf_token %}
-    <div>
+    <div class="sec">
         <h1>Blocks</h1>
         <h3>Dynamic content</h3>
         {% ablock 'example:counter' %}
-
         <a href="javascript:achilles.action('blocks:update', ['example:counter'])">Update!</a>
+
+        <h3>Block arguments</h3>
+        {% ablock 'example:with_args' 'a' %}
+        <a href="javascript:achilles.loadInto(achilles.block('example:with_args'), 'example:with_args', 'a')">A</a> |
+        <a href="javascript:achilles.loadInto(achilles.block('example:with_args'), 'example:with_args', 'b')">B</a> |
+        <a href="javascript:achilles.loadInto(achilles.block('example:with_args'), 'example:with_args', 'c')">C</a>
 
         <h3>Lazy load</h3>
         {% ablock_lazy 'example:slow' %}
     </div>
-    <div>
+    <div class="sec">
         <h1>Actions</h1>
         <div>
             <h3>Arguments and return values</h3>
@@ -68,16 +81,30 @@
             </script>
             <a href="javascript:divide()">Calculate!</a>
         </div>
-
-
+    </div>
+    <div class="sec" style="clear: both">
         <h1>Tables</h1>
         <div>
             {% ablock 'example:mytable' %}
         </div>
     </div>
+    <div class="sec">
+        <h1>Forms</h1>
+        <div>
+            {% ablock 'example:myform' %}
+            <script type="text/javascript">
+                function send(name) {
+                    form = achilles.block(name).find('form');
+                    data = form.serialize();
+                    achilles.action('forms:send', [name, data]);
+                }
+            </script>
+            <a href="javascript:send('example:myform')">Send form!</a>
+        </div>
+    </div>
 
 
-    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="/static/js/jquery.min.js"></script>
     {% achilles_js %}
   </body>
 </html>
