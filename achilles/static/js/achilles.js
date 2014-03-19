@@ -200,7 +200,7 @@
             };
 
             // load lazy blocks
-            var lazyblocks = $('[data-ablock][data-lazy]');
+            var lazyblocks = $('[data-ablock][data-ablock-lazy]');
             achilles.update(lazyblocks);
         },
 
@@ -219,7 +219,26 @@
         var blocks = $('[data-ablock]');
 
         if (name) blocks = blocks.filter('[data-ablock="'+name+'"]');
-        // TODO filter also by args + kwargs
+
+        if (args) {
+            blocks = blocks.filter(function(index) {
+                bargs = $.parseJSON(blocks.attr('data-ablock-args') || '[]');
+                for (k in args) {
+                    if (args[k] !== bargs[k]) return false;
+                }
+                return true;
+            });
+        }
+
+        if (kwargs) {
+            blocks = blocks.filter(function(index) {
+                bkwargs = $.parseJSON(blocks.attr('data-ablock-kwargs') || '{}');
+                for (k in kwargs) {
+                    if (kwargs[k] !== bkwargs[k]) return false;
+                }
+                return true;
+            });
+        }
 
         return blocks;
     };
@@ -234,8 +253,8 @@
         var _achilles = this;
         blocks.each(function(block) {
             var name = $(this).attr('data-ablock');
-            var args = $(this).attr('data-ablock-args') || [];
-            var kwargs = $(this).attr('data-ablock-kwargs') || {};
+            var args = $.parseJSON($(this).attr('data-ablock-args') || '[]');
+            var kwargs = $.parseJSON($(this).attr('data-ablock-kwargs') || '{}');
             _achilles.action('blocks:update', [name].concat(args), kwargs)
         });
     };
@@ -245,11 +264,11 @@
     Achilles.fn.loadInto = function(block, name, args, kwargs) {
         // Prepare the element wrapper
         block.attr('data-ablock', name);
-        if (args) block.attr('data-args', args);
-        if (kwargs) block.attr('data-kwargs', kwargs);
+        if (args) block.attr('data-ablock-args', JSON.stringify(args));
+        if (kwargs) block.attr('data-ablock-kwargs', JSON.stringify(kwargs));
 
         // Call for update
-        this.update(name, args, kwargs);
+        this.update(block);
     };
 
     // Register the controller

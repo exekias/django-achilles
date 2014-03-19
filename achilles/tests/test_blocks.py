@@ -66,7 +66,7 @@ class BlocksTests(TestCase):
             "{% ablock_lazy 'message_lazy' %}").render(Context())
 
         self.assertEqual(out, '<div data-ablock="message_lazy" ' +
-                              'data-lazy="true"></div>')
+                              'data-ablock-lazy="true"></div>')
 
     def test_render_noload_block(self):
         @self.register.block(template_name="block_template.html")
@@ -78,4 +78,4 @@ class BlocksTests(TestCase):
             "{% ablock_noload 'message_noload' %}").render(Context())
 
         self.assertEqual(out, '<div data-ablock="message_noload" ' +
-                              'data-noload="true"></div>')
+                              'data-ablock-noload="true"></div>')
