@@ -18,8 +18,13 @@
         <h1>Blocks</h1>
         <h3>Dynamic content</h3>
         {% ablock 'example:counter' %}
+        <a href="javascript:achilles.action('blocks:update', ['example:counter', 0])">Update!</a>
 
-        <a href="javascript:achilles.action('blocks:update', ['example:counter'])">Update!</a>
+        <h3>Block arguments</h3>
+        {% ablock 'example:with_args' 'a' %}
+        <a href="javascript:achilles.loadInto(achilles.block('example:with_args'), 'example:with_args', 'a')">A</a> |
+        <a href="javascript:achilles.loadInto(achilles.block('example:with_args'), 'example:with_args', 'b')">B</a> |
+        <a href="javascript:achilles.loadInto(achilles.block('example:with_args'), 'example:with_args', 'c')">C</a>
 
         <h3>Lazy load</h3>
         {% ablock_lazy 'example:slow' %}
@@ -77,7 +82,7 @@
             <a href="javascript:divide()">Calculate!</a>
         </div>
     </div>
-    <div class="sec">
+    <div class="sec" style="clear: both">
         <h1>Tables</h1>
         <div>
             {% ablock 'example:mytable' %}

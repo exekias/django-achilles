@@ -19,9 +19,16 @@ def counter():
 
 @register.block(template_name='blocks/message.html')
 def slow():
-    sleep(1)
+    sleep(2)
     return {
         'message':'This block was loaded after page was loaded!',
+    }
+
+@register.block(template_name='blocks/message.html')
+def with_args(index):
+    MSG = { x:'This is the %s block' % x.upper() for x in ('a', 'b', 'c') }
+    return {
+        'message':MSG[index],
     }
 
 @register.block('mytable')
