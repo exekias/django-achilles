@@ -1,3 +1,4 @@
 include README.rst
 include requirements.txt
 recursive-include achilles/static *
+recursive-include achilles/templates *
