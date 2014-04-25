@@ -64,6 +64,7 @@ def send(request, form, data):
     :param request: Request object
     :param form: Form block name
     :param data: Serialized form data
+    :returns: True if the form was valid, False if not
     """
     block = blocks.get(form)
     data = QueryDict(data, encoding=request.encoding)
@@ -71,5 +72,7 @@ def send(request, form, data):
 
     if form.is_valid():
         block.form_valid(request, form)
+        return True
     else:
         block.form_invalid(request, form)
+        return False
