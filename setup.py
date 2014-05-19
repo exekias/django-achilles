@@ -34,7 +34,7 @@ setup(
     zip_safe=False,
     license='Apache License (2.0)',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
         'Operating System :: OS Independent',
         'License :: OSI Approved :: Apache Software License',
