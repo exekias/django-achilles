@@ -1,20 +1,11 @@
 var jsdom = require('jsdom').jsdom;
 var assert = require('assert');
-var jsc = require('jscoverage');
 
 doc = jsdom('<html><body></body></html>');
 window = doc.createWindow();
 
 $ = require('jQuery').create(window);
-jsc.require(module, '../static/js/achilles.js');
-
-if (process.env.COVERAGE_REPORT) {
-    process.on('exit', function () {
-        jsc.coverage();
-        // jsc.coverageDetail();
-    });
-}
-
+require('../static/js/achilles-cov.js');
 
 // mock helper function
 function mock(return_value) {
