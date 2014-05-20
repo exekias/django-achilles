@@ -36,6 +36,7 @@ def achilles_plugins():
                        'actions': 'achilles.actions',
                        'console': 'achilles.console',
                        'redirect': 'achilles.redirect',
+                       'messages': 'achilles.messages',
                    })
 
 

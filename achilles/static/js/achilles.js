@@ -308,6 +308,34 @@
     Achilles.fn.registerController('redirect', redirect_controller);
 
 
+    /* MESSAGES */
+
+    var messages_controller = {
+
+        init: function(achilles) {
+
+            // Default message implementation
+            achilles.show_message = function(msg) {
+                messages = $('#messages');
+                if (messages) {
+                    var li = '<li class="' + msg.tags + '">' + msg.message + '</li>';
+                    messages.append(li);
+                }
+            };
+        },
+
+        process: function(achilles, messages) {
+            for (msg in messages) {
+                msg = messages[msg]
+                achilles.show_message(msg);
+            }
+        },
+    };
+
+    // Register the controller
+    Achilles.fn.registerController('messages', messages_controller);
+
+
     // Expose achilles
     window.Achilles = Achilles;
 })(window);
