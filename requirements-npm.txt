@@ -1,6 +1,5 @@
 mocha
-node-gyp --python=/usr/bin/python2.7
 jsdom
 assert
-jQuery
+jquery
 jscoverage
