@@ -14,7 +14,7 @@ matrix:
     - python: "3.3"
       env: DJANGO=1.5.5
 install:
-  - pip install -q Django==$DJANGO --use-mirrors
+  - pip install -q Django==$DJANGO
   - pip install -r requirements-dev.txt
   - cat requirements-npm.txt | xargs npm install
 script:
