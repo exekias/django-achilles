@@ -1,4 +1,5 @@
 SRC=achilles
+PATH:=node_modules/.bin/:$(PATH)
 
 sense: pep8 pyflakes test
 
