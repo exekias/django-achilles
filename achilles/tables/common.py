@@ -1,5 +1,6 @@
 from django.utils.translation import ugettext as _
 from django.template import Context
+from six import add_metaclass
 
 from achilles import blocks
 from achilles.tables.columns import Column
@@ -64,12 +65,11 @@ class TableMeta(type):
         return cls
 
 
+@add_metaclass(TableMeta)
 class Table(blocks.Block):
     """
     Table block, displays a table of elements
     """
-    __metaclass__ = TableMeta
-
     #: Template file
     template_name = 'achilles/table.html'
 
