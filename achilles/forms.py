@@ -33,10 +33,15 @@ class Form(blocks.Block):
     def get_form_kwargs(self, form_data=None, *args, **kwargs):
         kwargs = {
             'initial': self.get_initial(),
+            'instance': self.get_instance(*args, **kwargs),
         }
-        if form_data:
-            kwargs['data'] = form_data
         return kwargs
+
+    def get_instance(self, *args, **kwargs):
+        """
+        Return a instance object to pass to the form constructor
+        """
+        return None
 
     def get_context_data(self, *args, **kwargs):
         context = super(Form, self).get_context_data(*args, **kwargs)
