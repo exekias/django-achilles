@@ -1,5 +1,8 @@
 from django.template import Context
-from django.http.request import QueryDict
+try:
+    from django.http.request import QueryDict
+except ImportError:
+    from django.http import QueryDict
 
 from achilles import blocks, actions
 
@@ -26,6 +29,9 @@ class Form(blocks.Block):
 
     def get_form(self, form_data=None, *args, **kwargs):
         if not self._form:
+            if self.form_class is None:
+                raise ValueError("form_class is undefined %s" %
+                                 type(self).__name__)
             self._form = self.form_class(data=form_data,
                                          **self.get_form_kwargs())
         return self._form
