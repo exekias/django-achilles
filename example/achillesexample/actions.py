@@ -1,17 +1,23 @@
+from django.contrib import messages
+
 from achilles import actions, blocks, console
+
 
 register = actions.Library('example')
 
 @register.action
 def multiply(request, a, b):
+    messages.info(request, 'Multiplication done')
     return float(a) * float(b)
 
 @register.action
 def divide(request, a, b):
+    messages.info(request, 'Division done')
     return float(a) / float(b)
 
 @register.action
 def log(request):
+    messages.info(request, 'Check your browser console')
     console.log(request, "This is a message from the server!")
 
 @register.action
