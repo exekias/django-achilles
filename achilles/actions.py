@@ -49,10 +49,10 @@ def get(name):
     for app in settings.INSTALLED_APPS:
         try:
             import_module(app + '.actions')
-        except ImportError as e:
-             tb = sys.exc_info()[2]
-             stack = traceback.extract_tb(tb, 3)
-             if len(stack) > 2:
+        except ImportError:
+            tb = sys.exc_info()[2]
+            stack = traceback.extract_tb(tb, 3)
+            if len(stack) > 2:
                 raise
 
     return Library.get_global(name)
