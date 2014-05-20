@@ -33,8 +33,10 @@ class Form(blocks.Block):
     def get_form_kwargs(self, form_data=None, *args, **kwargs):
         kwargs = {
             'initial': self.get_initial(),
-            'instance': self.get_instance(*args, **kwargs),
         }
+        instance = self.get_instance(*args, **kwargs)
+        if instance:
+            kwargs['instance'] = instance,
         return kwargs
 
     def get_instance(self, *args, **kwargs):
@@ -46,6 +48,7 @@ class Form(blocks.Block):
     def get_context_data(self, *args, **kwargs):
         context = super(Form, self).get_context_data(*args, **kwargs)
         context.update({
+            'block': self,
             'form': self.get_form(*args, **kwargs),
         })
         return context
@@ -61,7 +64,7 @@ class Form(blocks.Block):
 
 
 @register.action
-def send(request, form, data):
+def send(request, form, args=[], kwargs={}, data={}):
     """
     Validate a form and call the proper callback Form.form_valid
     or Form.form_invalid
@@ -73,7 +76,7 @@ def send(request, form, data):
     """
     block = blocks.get(form)
     data = QueryDict(data, encoding=request.encoding)
-    form = block.get_form(form_data=data)
+    form = block.get_form(form_data=data, *args, **kwargs)
 
     if form.is_valid():
         block.form_valid(request, form)
