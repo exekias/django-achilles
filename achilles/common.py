@@ -95,8 +95,10 @@ class BaseLibrary(object):
 
         # Register the instanced library
         if namespace in type(self).registers:
+            library = type(self).registers[namespace]
             raise ValueError("An namespace with name "
-                             "'%s' is already registered" % namespace)
+                             "'%s' is already registered in '%s'" %
+                             (namespace, library.__module__))
 
         type(self).registers[namespace] = self
         self.namespace = namespace
