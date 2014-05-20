@@ -36,13 +36,14 @@ class Form(blocks.Block):
                                          **self.get_form_kwargs())
         return self._form
 
-    def get_form_kwargs(self, form_data=None, *args, **kwargs):
+    def get_form_kwargs(self, *args, **kwargs):
         kwargs = {
             'initial': self.get_initial(),
         }
         instance = self.get_instance(*args, **kwargs)
         if instance:
-            kwargs['instance'] = instance,
+            kwargs['instance'] = instance
+
         return kwargs
 
     def get_instance(self, *args, **kwargs):
