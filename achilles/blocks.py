@@ -5,6 +5,8 @@ from django.utils.log import getLogger
 
 from inspect import isclass
 from importlib import import_module
+import sys
+import traceback
 
 from achilles.common import BaseLibrary, achilles_data
 from achilles.actions import Library as ActionsLibrary
@@ -102,8 +104,11 @@ def get(name, context=None):
     for app in settings.INSTALLED_APPS:
         try:
             import_module(app + '.blocks')
-        except ImportError:
-            pass
+        except ImportError as e:
+             tb = sys.exc_info()[2]
+             stack = traceback.extract_tb(tb, 3)
+             if len(stack) > 2:
+                raise
 
     return Library.get_global(name)(context)
 
