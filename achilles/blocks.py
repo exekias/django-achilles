@@ -84,7 +84,8 @@ class Library(BaseLibrary):
                     res = func(self.context, *args, **kwargs)
                 else:
                     res = func(*args, **kwargs)
-                context.update(res)
+                if res != context:
+                    context.update(res)
                 return context
         return B
 

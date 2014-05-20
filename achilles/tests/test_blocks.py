@@ -39,6 +39,18 @@ class BlocksTests(TestCase):
             "{% ablock 'message' %}").render(Context())
         self.assertEqual(out, '<div data-ablock="message">foo\n</div>')
 
+    def test_render_function_block_returning_same_context(self):
+        @self.register.block(template_name='block_template.html',
+                             takes_context=True)
+        def message(context):
+            context['message'] = 'foo'
+            return context
+
+        out = Template(
+            "{% load achilles %}"
+            "{% ablock 'message' %}").render(Context())
+        self.assertEqual(out, '<div data-ablock="message">foo\n</div>')
+
     def test_render_class_block(self):
         @self.register.block('message')
         class Message(blocks.Block):
