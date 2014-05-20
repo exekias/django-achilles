@@ -1,5 +1,8 @@
 from django.template import Context
-from django.http.request import QueryDict
+try:
+    from django.http.request import QueryDict
+except ImportError:
+    from django.http import QueryDict
 
 from achilles import blocks, actions
 
