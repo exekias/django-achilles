@@ -3,10 +3,11 @@ from django.template import Context, RequestContext
 from django.template.loader import get_template
 from django.utils.log import getLogger
 
+import sys
+import six
+import traceback
 from inspect import isclass
 from importlib import import_module
-import sys
-import traceback
 
 from achilles.common import BaseLibrary, achilles_data
 from achilles.actions import Library as ActionsLibrary
@@ -102,13 +103,18 @@ def get(name, context=None):
     """
     # make sure all blocks are loaded
     for app in settings.INSTALLED_APPS:
-        try:
-            import_module(app + '.blocks')
-        except ImportError:
-            tb = sys.exc_info()[2]
-            stack = traceback.extract_tb(tb, 3)
-            if len(stack) > 2:
-                raise
+        if six.PY2:
+            try:
+                import_module(app + '.blocks')
+            except ImportError:
+                tb = sys.exc_info()[2]
+                stack = traceback.extract_tb(tb, 3)
+                if len(stack) > 2:
+                    raise
+        else:
+            from importlib import find_loader
+            if find_loader(app + '.blocks'):
+                import_module(app + '.blocks')
 
     return Library.get_global(name)(context)
 

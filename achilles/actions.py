@@ -3,10 +3,11 @@ from importlib import import_module
 
 from achilles.common import BaseLibrary, achilles_data
 
-import django.dispatch
 import logging
 import sys
+import six
 import traceback
+import django.dispatch
 
 
 logger = logging.getLogger(__name__)
@@ -47,13 +48,18 @@ def get(name):
     """
     # make sure all actions are loaded
     for app in settings.INSTALLED_APPS:
-        try:
-            import_module(app + '.actions')
-        except ImportError:
-            tb = sys.exc_info()[2]
-            stack = traceback.extract_tb(tb, 3)
-            if len(stack) > 2:
-                raise
+        if six.PY2:
+            try:
+                import_module(app + '.actions')
+            except ImportError:
+                tb = sys.exc_info()[2]
+                stack = traceback.extract_tb(tb, 3)
+                if len(stack) > 2:
+                    raise
+        else:
+            from importlib import find_loader
+            if find_loader(app + '.actions'):
+                import_module(app + '.actions')
 
     return Library.get_global(name)
 
