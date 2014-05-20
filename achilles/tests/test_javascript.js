@@ -4,7 +4,7 @@ var assert = require('assert');
 doc = jsdom('<html><body></body></html>');
 window = doc.createWindow();
 
-$ = require('jQuery').create(window);
+$ = require('jquery')(window);
 require('../static/js/achilles-cov.js');
 
 // mock helper function
