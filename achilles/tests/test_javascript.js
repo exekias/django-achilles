@@ -1,10 +1,10 @@
 var jsdom = require('jsdom').jsdom;
 var assert = require('assert');
 
-doc = jsdom('<html><body></body></html>');
+var doc = jsdom('<html><body></body></html>');
 window = doc.createWindow();
 
-$ = require('jquery')(window);
+var $ = require('jQuery').create(window);
 require('../static/js/achilles-cov.js');
 
 // mock helper function

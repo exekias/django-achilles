@@ -1,5 +1,5 @@
 mocha
 jsdom
 assert
-jquery
+jQuery
 jscoverage
