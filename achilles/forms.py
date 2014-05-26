@@ -5,6 +5,7 @@ except ImportError:
     from django.http import QueryDict
 
 from achilles import blocks, actions
+import json
 
 
 register = actions.Library('forms')
@@ -56,7 +57,9 @@ class Form(blocks.Block):
         context = super(Form, self).get_context_data(*args, **kwargs)
         context.update({
             'block': self,
-            'form': self.get_form(*args, **kwargs),
+            'form': self.get_form(None, *args, **kwargs),
+            'args': json.dumps(args),
+            'kwargs': json.dumps(kwargs),
         })
         return context
 
@@ -83,7 +86,7 @@ def send(request, form, args=[], kwargs={}, data={}):
     """
     block = blocks.get(form)
     data = QueryDict(data, encoding=request.encoding)
-    form = block.get_form(form_data=data, *args, **kwargs)
+    form = block.get_form(data, *args, **kwargs)
 
     if form.is_valid():
         block.form_valid(request, form)
