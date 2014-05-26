@@ -84,23 +84,38 @@ class MergeColumn(Column):
         return ' '.join([c.render(obj) for (n, c) in self.columns])
 
 
-class ActionColumn(Column):
+class ButtonColumn(Column):
+    """
+    Button column, just a link to the given href
+    """
+    def __init__(self, href='#', classes='', *args, **kwargs):
+        super(ButtonColumn, self).__init__(*args, **kwargs)
+        self.href = href
+        self.classes = classes
+
+    def get_href(self):
+        return self.href
+
+    def content(self, obj):
+        return ("<a class=\"%s\" href=\"%s\">%s</a>") % (
+            self.classes, self.get_href(obj), self.verbose_name)
+
+
+class ActionColumn(ButtonColumn):
     """
     Action calling column, it will show a button that will can
     the given action on click, the action will get the the table
     and object in the row as arguments
     """
     def __init__(self, action, classes='', *args, **kwargs):
-        super(ActionColumn, self).__init__(*args, **kwargs)
+        super(ActionColumn, self).__init__(classes=classes, *args, **kwargs)
         self.action = action
-        self.classes = classes
 
-    def content(self, obj):
+    def get_href(self, obj):
         id_field = self.table.id_field
-        return ("<a class=\"%s\" href=\"javascript:achilles.action("
-                "'tables:call_action', ['%s', '%s', '%s'])\">%s</a>") % (
-            self.classes, self.table.register_name, self.action,
-            getattr(obj, id_field), self.verbose_name)
+        return ("javascript:achilles.action("
+                "'tables:call_action', ['%s', '%s', '%s'])") % (
+            self.table.register_name, self.action, getattr(obj, id_field))
 
 
 @register.action
