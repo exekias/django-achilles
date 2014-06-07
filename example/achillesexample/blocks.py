@@ -48,7 +48,7 @@ class MyForm(djforms.Form):
     last_name = djforms.CharField()
 
 @register.block('myform')
-class Form(forms.Form):
+class FormBlock(forms.Form):
     form_class = MyForm
 
     def form_valid(self, request, form):
