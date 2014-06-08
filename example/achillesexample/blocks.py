@@ -51,6 +51,6 @@ class MyForm(djforms.Form):
 class FormBlock(forms.FormBlock):
     form_class = MyForm
 
-    def form_valid(self, request, form):
+    def form_valid(self, transport, form):
         Person.objects.get_or_create(**form.cleaned_data)
-        blocks.update(request, 'example:mytable')
+        blocks.update(transport, 'example:mytable')
