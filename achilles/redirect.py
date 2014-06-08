@@ -5,7 +5,8 @@ def redirect(transport, url):
     :param transport: Achilles tranport object that is being served
     :param url: URL to go to
     """
-    redirect = transport.data('redirect', {'url': url})
+    redirect = transport.data('redirect', {})
+    redirect['url'] = url
 
 
 def render(transport):
