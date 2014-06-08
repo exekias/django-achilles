@@ -84,7 +84,10 @@ def run_actions(transport, actions):
 
         # run and save return value
         try:
-            result = action(transport, *a.get('args', []), **a.get('kwargs', {}))
+            result = action(transport,
+                            *a.get('args', []),
+                            **a.get('kwargs', {}))
+
             data[a['id']] = {
                 'value': result
             }

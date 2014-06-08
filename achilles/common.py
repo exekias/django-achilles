@@ -35,7 +35,7 @@ class AchillesTransport(object):
         If key value is given, this function will return that key (if exists)
         from achilles response dict.
 
-        If default is given it will be asigned and returned in it does not exists
+        If default is given it will be asigned and returned if it doesn't exist
         """
         if key not in self._data and default is not None:
             self._data[key] = default
