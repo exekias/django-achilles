@@ -1,6 +1,7 @@
 from django.test import RequestFactory
 from django.test import TestCase
 
+from achilles.common import AchillesTransport
 from achilles import actions
 
 
@@ -9,10 +10,10 @@ class ActionsTests(TestCase):
     @classmethod
     def setupClass(cls):
         cls.register = actions.Library()
-        cls.request_factory = RequestFactory()
 
     def setUp(self):
-        self.request = self.request_factory.get('/path')
+        request = RequestFactory().get('/path')
+        self.transport = AchillesTransport(request)
 
     def test_run_function_action(self):
         @self.register.action
@@ -21,14 +22,14 @@ class ActionsTests(TestCase):
 
         a = actions.get('action')
         self.assertEqual(a, action)
-        self.assertEqual(10, a(self.request))
+        self.assertEqual(10, a(self.transport))
 
     def test_run_actions(self):
         @self.register.action
         def action(request, param=13):
             return param
 
-        actions.run_actions(self.request, [
+        actions.run_actions(self.transport, [
             {
                 'name': 'action',
                 'id': '1',
@@ -45,7 +46,7 @@ class ActionsTests(TestCase):
             },
         ])
 
-        data = actions.render(self.request)
+        data = actions.render(self.transport)
 
         self.assertEqual(data["1"]["value"], 13)
         self.assertEqual(data["2"]["value"], 2)
@@ -56,14 +57,14 @@ class ActionsTests(TestCase):
         def action(request):
             raise ValueError('foo')
 
-        actions.run_actions(self.request, [
+        actions.run_actions(self.transport, [
             {
                 'name': 'action',
                 'id': '1',
             },
         ])
 
-        data = actions.render(self.request)
+        data = actions.render(self.transport)
 
         self.assertEqual(data["1"]["error"], 'ValueError')
         self.assertEqual(data["1"]["message"], 'foo')

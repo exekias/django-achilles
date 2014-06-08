@@ -22,7 +22,6 @@ class AchillesTransport(object):
 
         # common properties
         self.encoding = request.encoding
-        self.user = request.user
 
         # backend specific properties
         self.request = request
