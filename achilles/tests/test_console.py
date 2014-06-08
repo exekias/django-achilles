@@ -1,20 +1,18 @@
 from django.test import TestCase
 from django.test import RequestFactory
 
+from achilles.common import AchillesTransport
 from achilles import console
 
 
 class ConsoleTests(TestCase):
 
-    @classmethod
-    def setupClass(cls):
-        cls.request_factory = RequestFactory()
-
     def setUp(self):
-        self.request = self.request_factory.get('/path')
+        request = RequestFactory().get('/path')
+        self.transport = AchillesTransport(request)
 
     def test_console_log(self):
 
-        console.log(self.request, 'test message')
+        console.log(self.transport, 'test message')
 
-        self.assertIn('test message', console.render(self.request))
+        self.assertIn('test message', console.render(self.transport))

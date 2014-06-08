@@ -63,14 +63,14 @@ class FormBlock(blocks.Block):
         })
         return context
 
-    def form_valid(self, request, form):
+    def form_valid(self, transport, form):
         raise NotImplementedError("You should implement this method")
 
-    def form_invalid(self, request, form):
+    def form_invalid(self, transport, form):
         """
         Update the form with error messages
         """
-        self.update(request)
+        self.update(transport)
 
 
 class ModelFormBlock(FormBlock):
@@ -87,28 +87,28 @@ class ModelFormBlock(FormBlock):
 
         return self.form_class(form_data, instance=instance)
 
-    def form_valid(self, request, form):
+    def form_valid(self, transport, form):
         form.save()
 
 
 @register.action
-def send(request, form, args=[], kwargs={}, data={}):
+def send(transport, form, args=[], kwargs={}, data={}):
     """
     Validate a form and call the proper callback FormBlock.form_valid
     or FormBlock.form_invalid
 
-    :param request: Request object
+    :param transport: Achilles transport object
     :param form: Form block name
     :param data: Serialized form data
     :returns: True if the form was valid, False if not
     """
     block = blocks.get(form)
-    data = QueryDict(data, encoding=request.encoding)
+    data = QueryDict(data, encoding=transport.encoding)
     form = block.get_form(data, *args, **kwargs)
 
     if form.is_valid():
-        block.form_valid(request, form)
+        block.form_valid(transport, form)
         return True
     else:
-        block.form_invalid(request, form)
+        block.form_invalid(transport, form)
         return False

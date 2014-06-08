@@ -3,24 +3,24 @@ from achilles import actions, blocks, console
 register = actions.Library('example')
 
 @register.action
-def multiply(request, a, b):
+def multiply(transport, a, b):
     return float(a) * float(b)
 
 @register.action
-def divide(request, a, b):
+def divide(transport, a, b):
     return float(a) / float(b)
 
 @register.action
-def log(request):
-    console.log(request, "This is a message from the server!")
+def log(transport):
+    console.log(transport, "This is a message from the server!")
 
 @register.action
-def miau_person(request, table, person):
+def miau_person(transport, table, person):
     person.last_name = 'Miau ' + person.last_name
     person.save()
-    blocks.update(request, 'example:mytable')
+    blocks.update(transport, 'example:mytable')
 
 @register.action
-def delete_person(request, table, person):
+def delete_person(transport, table, person):
     person.delete()
-    blocks.update(request, 'example:mytable')
+    blocks.update(transport, 'example:mytable')

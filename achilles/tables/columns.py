@@ -119,17 +119,17 @@ class ActionColumn(ButtonColumn):
 
 
 @register.action
-def call_action(request, table, action, id):
+def call_action(transport, table, action, id):
     """
     Call table action on the given row
 
-    :param request: The client request
+    :param transport: achilles transport
     :param table: Name of the table calling this
     :param action: Name of the action to call
     :param id: Id of the object
     """
-    context = RequestContext(request, {})
+    context = RequestContext(transport.request, {})
     table = blocks.get(table, context)
     obj = table.get_object(id)
     action = actions.get(action)
-    action(request, table, obj)
+    action(transport, table, obj)

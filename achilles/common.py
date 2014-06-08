@@ -7,23 +7,39 @@ from importlib import import_module
 import sys
 
 
-def achilles_data(request, key=None, default=None):
+class AchillesTransport(object):
     """
-    Return achilles response dict. Achilles stores here data related
-    to the request, in order to prepare a reply.
-
-    If key value is given, this function will return that key (if exists)
-    from achilles response dict.
-
-    If default is given it will be asigned and returned in it does not exists
+    Transport object, holds information context for some user requests
+    and response
     """
-    if not hasattr(request, '_achilles'):
-        request._achilles = {}
+    def __init__(self, request):
+        """
+        Achilles Transport init for Django requests, it gets a request object
+        and fills its fields from it
+        """
+        # plugin's data
+        self._data = {}
 
-    if key not in request._achilles and default is not None:
-        request._achilles[key] = default
+        # common properties
+        self.encoding = request.encoding
 
-    return request._achilles[key]
+        # backend specific properties
+        self.request = request
+
+    def data(self, key=None, default=None):
+        """
+        Return achilles response dict. Achilles stores here data related
+        to the request, in order to prepare a reply.
+
+        If key value is given, this function will return that key (if exists)
+        from achilles response dict.
+
+        If default is given it will be asigned and returned if it doesn't exist
+        """
+        if key not in self._data and default is not None:
+            self._data[key] = default
+
+        return self._data[key]
 
 
 def achilles_plugins():

@@ -1,7 +1,7 @@
 from django.conf import settings
 from importlib import import_module
 
-from achilles.common import BaseLibrary, achilles_data
+from achilles.common import BaseLibrary
 
 import logging
 import sys
@@ -25,7 +25,7 @@ class Library(BaseLibrary):
         register = actions.Library('myapp')
 
         @register.action
-        def foo(request, *args, **kwargs):
+        def foo(transport, *args, **kwargs):
             # do stuff
             pass
 
@@ -65,26 +65,29 @@ def get(name):
 
 
 #: Signal dispatched before executing client sent actions
-pre_actions_call = django.dispatch.Signal(providing_args=['request'])
+pre_actions_call = django.dispatch.Signal(providing_args=['transport'])
 
 #: Signal dispatched after executing client sent actions
-post_actions_call = django.dispatch.Signal(providing_args=['request'])
+post_actions_call = django.dispatch.Signal(providing_args=['transport'])
 
 
-def run_actions(request, actions):
+def run_actions(transport, actions):
     """
     Run the given list of actions sent by the client
     """
-    pre_actions_call.send(request, request=request)
+    pre_actions_call.send(transport, transport=transport)
 
-    data = achilles_data(request, 'actions', {})
+    data = transport.data('actions', {})
     for a in actions:
         name = a['name']
         action = get(name)
 
         # run and save return value
         try:
-            result = action(request, *a.get('args', []), **a.get('kwargs', {}))
+            result = action(transport,
+                            *a.get('args', []),
+                            **a.get('kwargs', {}))
+
             data[a['id']] = {
                 'value': result
             }
@@ -99,8 +102,8 @@ def run_actions(request, actions):
 
             logger.exception("Error on %s action" % name)
 
-    post_actions_call.send(request, request=request)
+    post_actions_call.send(transport, transport=transport)
 
 
-def render(request):
-    return achilles_data(request, 'actions', [])
+def render(transport):
+    return transport.data('actions', {})
