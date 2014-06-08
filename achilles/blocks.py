@@ -9,7 +9,7 @@ import traceback
 from inspect import isclass
 from importlib import import_module
 
-from achilles.common import BaseLibrary, achilles_data
+from achilles.common import BaseLibrary
 from achilles.actions import Library as ActionsLibrary
 
 logger = getLogger(__name__)
@@ -149,12 +149,11 @@ class Block(object):
         """
         return self.context
 
-    def update(self, request, *args, **kwargs):
+    def update(self, transport, *args, **kwargs):
         """
-        Render and send the update of block within the given request
+        Render and send the update of block within the given achilles transport
         """
-        blocks = achilles_data(request, 'blocks', [])
-        blocks.append({
+        transport.data('blocks', []).append({
             'name': self.register_name,
             'args': args,
             'kwargs': kwargs,
@@ -166,7 +165,7 @@ register = ActionsLibrary('blocks')
 
 
 @register.action
-def update(request, name, *args, **kwargs):
+def update(transport, name, *args, **kwargs):
     """
     Action name: **blocks:update**
 
@@ -177,13 +176,13 @@ def update(request, name, *args, **kwargs):
     the block handler. When using arguments, only blocks matching them
     will be updated.
 
-    :param request: Django request object that is being served
+    :param transport: Achilles transport object that is being served
     :param name: Fully namespaced block name
     """
-    context = RequestContext(request, {})
+    context = RequestContext(transport.request, {})
     block = get(name, context)
-    block.update(request, *args, **kwargs)
+    block.update(transport, *args, **kwargs)
 
 
-def render(request):
-    return achilles_data(request, 'blocks', [])
+def render(transport):
+    return transport.data('blocks', [])

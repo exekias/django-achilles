@@ -1,16 +1,12 @@
-from achilles.common import achilles_data
-
-
-def redirect(request, url):
+def redirect(transport, url):
     """
     Log the given message to client's javascript console
 
-    :param request: Django request object that is being served
+    :param transport: Achilles tranport object that is being served
     :param url: URL to go to
     """
-    redirect = achilles_data(request, 'redirect', {})
-    redirect['url'] = url
+    redirect = transport.data('redirect', {'url': url})
 
 
-def render(request):
-    return achilles_data(request, 'redirect', {})
+def render(transport):
+    return transport.data('redirect', {})

@@ -1,16 +1,12 @@
-from achilles.common import achilles_data
-
-
-def log(request, msg):
+def log(transport, msg):
     """
     Log the given message to client's javascript console
 
-    :param request: Django request object that is being served
+    :param transport: Achilles transport object that is being served
     :param msg: Log message that will be pushed to the console
     """
-    logs = achilles_data(request, 'console', [])
-    logs.append(msg)
+    transport.data('console', []).append(msg)
 
 
-def render(request):
-    return achilles_data(request, 'console', [])
+def render(transport):
+    return transport.data('console', [])
