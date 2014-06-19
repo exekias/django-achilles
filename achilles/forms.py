@@ -56,7 +56,7 @@ class FormBlock(blocks.Block):
     def get_context_data(self, *args, **kwargs):
         context = super(FormBlock, self).get_context_data(*args, **kwargs)
         context.update({
-            'block': self,
+            'formblock': self,
             'form': self.get_form(None, *args, **kwargs),
             'args': json.dumps(args),
             'kwargs': json.dumps(kwargs),
