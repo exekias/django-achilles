@@ -133,3 +133,4 @@ def call_action(transport, table, action, id):
     obj = table.get_object(id)
     action = actions.get(action)
     action(transport, table, obj)
+    blocks.update(transport, table.register_name)

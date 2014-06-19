@@ -24,9 +24,7 @@ def log(transport):
 def miau_person(transport, table, person):
     person.last_name = 'Miau ' + person.last_name
     person.save()
-    blocks.update(transport, 'example:mytable')
 
 @register.action
 def delete_person(transport, table, person):
     person.delete()
-    blocks.update(transport, 'example:mytable')
