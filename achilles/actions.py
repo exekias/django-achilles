@@ -37,6 +37,25 @@ class Library(BaseLibrary):
         # Provide action register
         self.action = self.register
 
+    def _register(self, func, name=None):
+        def wrapper(transport, *args, **kwargs):
+            pre_action_call.send(sender=wrapper,
+                                 transport=transport,
+                                 args=args, kwargs=kwargs)
+
+            result = func(transport, *args, **kwargs)
+
+            post_action_call.send(sender=wrapper,
+                                  transport=transport,
+                                  args=args, kwargs=kwargs)
+            return result
+
+        name = name or getattr(func, '_decorated_function', func).__name__
+        wrapper.register_name = ':'.join([self.namespace or '', name])
+        wrapper.__name__ = name
+        self.items[name] = wrapper
+        return wrapper
+
 
 def get(name):
     """
@@ -63,6 +82,12 @@ def get(name):
 
     return Library.get_global(name)
 
+
+#: Signal dispatched before executing an action
+pre_action_call = django.dispatch.Signal(providing_args=['transport'])
+
+#: Signal dispatched after executing an action
+post_action_call = django.dispatch.Signal(providing_args=['transport'])
 
 #: Signal dispatched before executing client sent actions
 pre_actions_call = django.dispatch.Signal(providing_args=['transport'])
