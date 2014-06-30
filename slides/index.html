@@ -48,8 +48,57 @@
         </section>
 
         <section>
+          <h2>Features</h2>
+          <ul>
+            <li>Integration with JQuery and Django (>=1.4)</li>
+            <li>Asynchronous server side action calling (with return values)</li>
+            <li>Dynamically loaded (HTML) blocks</li>
+            <li>Error management</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Setup</h2>
+
+          <ul>
+            <li> Install trough pip
+              <code>
+                <pre>pip install django-achilles</pre>
+              </code>
+            </li>
+            <li>Add achilles to INSTALLED_APPS in Django settings
+              <code>
+                <pre>
+INSTALLED_APPS = (
+    'django.contrib.auth',
+    ...
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'myapp',
+    'achilles',
+)
+                </pre>
+              </code>
+            </li>
+            <li>Create achilles endpoint adding achilles.urls to your urls.py file
+              <code>
+                <pre>
+from django.conf.urls import patterns, url, include
+from myapp.views import SomeView
+
+urlpatterns = patterns('',
+    url(r'^$', SomeView.as_view(), name='home'),
+    url(r'^achilles$', include('achilles.urls')),
+)
+                </pre>
+              </code>
+            </li>
+          </ul>
+        </section>
+
+        <section>
           <h1>Thank you!</h1>
-          <h2>Any question?</h2>
+          <h3>Any question?</h3>
           <p>
             <br />Carlos Pérez-Aradros Herce
             <br /><a href="http://twitter.com/exekias">@exekias</a> /
@@ -81,7 +130,6 @@
           { src: 'https://exekias.github.io/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
         ]
       });
-
     </script>
 
   </body>
