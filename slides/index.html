@@ -1,85 +1,84 @@
 <!doctype html>
 <html lang="en">
 
-	<head>
-		<meta charset="utf-8">
+  <head>
+    <meta charset="utf-8">
 
-		<title>reveal.js - The HTML Presentation Framework</title>
+    <title>Achilles - Django AJAX Framework </title>
 
-		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
-		<meta name="author" content="Hakim El Hattab">
+    <meta name="description" content="Achilles - Django AJAX Framework">
+    <meta name="author" content="Carlos Pérez-Aradros Herce">
 
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/reveal.js/2.6.2/css/reveal.min.css">
-		<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/reveal.js/2.6.2/css/theme/night.css" id="theme">
+    <link rel="stylesheet" type="text/css" href="https://exekias.github.io/reveal.js/css/reveal.min.css">
+    <link rel="stylesheet" type="text/css" href="https://exekias.github.io/reveal.js/css/theme/night.css" id="theme">
 
-		<!-- For syntax highlighting -->
-		<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/reveal.js/2.6.2/lib/css/zenburn.css">
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="https://exekias.github.io/reveal.js/lib/css/zenburn.css">
 
-		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
-		<script>
-			if( window.location.search.match( /print-pdf/gi ) ) {
-				var link = document.createElement( 'link' );
-				link.rel = 'stylesheet';
-				link.type = 'text/css';
-				link.href = 'http://cdnjs.cloudflare.com/ajax/libs/reveal.js/2.6.2/css/print/pdf.css';
-				document.getElementsByTagName( 'head' )[0].appendChild( link );
-			}
-		</script>
+    <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+    <script>
+      if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = 'https://exekias.github.io/reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+      }
+    </script>
 
-		<!--[if lt IE 9]>
-		<script src="lib/js/html5shiv.js"></script>
-		<![endif]-->
-	</head>
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
 
-	<body>
+  <body>
 
-		<div class="reveal">
+    <div class="reveal">
 
-			<!-- Any section element inside of this container is displayed as a slide -->
-			<div class="slides">
-				<section data-background="url(akhilleus_aias.jpg)" data-background-size="100%">
-					<h1>Django Achilles</h1>
-					<h3>The Django AJAX Framework</h3>
-				</section>
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+        <section data-background="url(akhilleus_aias.jpg)" data-background-size="100%">
+          <h1>Achilles</h1>
+          <h3>Django AJAX Framework</h3>
+        </section>
 
-				<section>
-					<h1>Thank you!</h1>
+        <section>
+          <h1>Thank you!</h1>
                     <h2>Any question?</h2>
-					<h3><a href="http://twitter.com/exekias">@exekias</a> / <a href="http://exekias.me">exekias.me</a></h3>
-				</section>
+          <p><a href="http://twitter.com/exekias">@exekias</a> / <a href="http://exekias.me">exekias.me</a></p>
+        </section>
 
-			</div>
+      </div>
 
-		</div>
+    </div>
 
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/reveal.js/2.6.2/lib/js/head.min.js"></script>
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/reveal.js/2.6.2/js/reveal.min.js"></script>
+    <script src="https://exekias.github.io/reveal.js/lib/js/head.min.js"></script>
+    <script src="https://exekias.github.io/reveal.js/js/reveal.min.js"></script>
 
-		<script>
+    <script>
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: false,
+        progress: true,
+        history: true,
+        center: true,
 
-			// Full list of configuration options available here:
-			// https://github.com/hakimel/reveal.js#configuration
-			Reveal.initialize({
-				controls: false,
-				progress: true,
-				history: true,
-				center: true,
+        transition: 'linear', // default/cube/page/concave/zoom/linear/fade/none
+        transitionSpeed: 'fast',
 
-				transition: 'linear', // default/cube/page/concave/zoom/linear/fade/none
-                transitionSpeed: 'fast',
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'https://exekias.github.io/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+        ]
+      });
 
-				// Optional libraries used to extend on reveal.js
-				dependencies: [
-					{ src: 'http://cdnjs.cloudflare.com/ajax/libs/reveal.js/2.6.2/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-				]
-			});
+    </script>
 
-		</script>
-
-	</body>
+  </body>
 </html>
