@@ -1,4 +1,8 @@
 <form class="{% block formclass %}{% endblock %}" method="post" onsubmit="achilles.action('forms:send', ['{{ formblock.register_name }}', {{ args }}, {{ kwargs }}, $(this).serialize()]); return false">
     {% block form %}{{ form.as_p }}{% endblock %}
-    {% block buttons %}{% endblock %}
+    {% block buttons %}
+        {% for button in formblock.buttons %}
+            {{ button.render|safe }}
+        {% endfor %}
+    {% endblock %}
 </form>

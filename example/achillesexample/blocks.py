@@ -48,8 +48,12 @@ class MyForm(djforms.Form):
     last_name = djforms.CharField()
 
 @register.block('myform')
-class FormBlock(forms.FormBlock):
+class Form(forms.Form):
     form_class = MyForm
+
+    # Buttons
+    reset = forms.ResetButton('Reset', type='reset')
+    send = forms.SubmitButton('Save', type='submit')
 
     def form_valid(self, transport, form):
         Person.objects.get_or_create(**form.cleaned_data)

@@ -5,13 +5,51 @@ except ImportError:
     from django.http import QueryDict
 
 from achilles import blocks, actions
+
 import json
 
 
 register = actions.Library('forms')
 
 
-class FormBlock(blocks.Block):
+class Button(object):
+    """
+    Form button, execute some action on the specific form
+    """
+    creation_counter = 0
+
+    def __init__(self, printable_name=None, type='submit'):
+        """
+        :param printable_name: User visible name
+        :param type: Button type (submit, button, reset)
+        """
+        Button.creation_counter += 1
+        self.creation_counter = Button.creation_counter
+        self.printable_name = printable_name
+        self.type = type
+
+    def render(self):
+        return '<button type="%s">%s</button>' % (self.type,
+                                                  self.printable_name)
+
+
+class SubmitButton(Button):
+    """
+    Form submit button
+    """
+    def __init__(self, printable_name=None, **kwargs):
+        super(SubmitButton, self).__init__(printable_name, type='submit')
+
+
+class ResetButton(Button):
+    """
+    Form reset button
+    """
+    def __init__(self, printable_name=None, **kwargs):
+        super(ResetButton, self).__init__(printable_name, type='reset')
+
+
+class Form(blocks.Block):
     """
     Form block, display a form, see action func:`send` for submitting
     """
@@ -22,7 +60,7 @@ class FormBlock(blocks.Block):
     form_class = None
 
     def __init__(self, context=Context()):
-        super(FormBlock, self).__init__(context)
+        super(Form, self).__init__(context)
         self._form = None
 
     def get_initial(self):
@@ -54,7 +92,7 @@ class FormBlock(blocks.Block):
         return None
 
     def get_context_data(self, *args, **kwargs):
-        context = super(FormBlock, self).get_context_data(*args, **kwargs)
+        context = super(Form, self).get_context_data(*args, **kwargs)
         context.update({
             'formblock': self,
             'form': self.get_form(None, *args, **kwargs),
@@ -62,6 +100,20 @@ class FormBlock(blocks.Block):
             'kwargs': json.dumps(kwargs),
         })
         return context
+
+    def buttons(self):
+        """
+        List of :class:`Button` elements defined for this form
+        """
+        buttons = []
+        for b in dir(self):
+            b = getattr(self, b)
+            if isinstance(b, Button):
+                buttons.append(b)
+
+        # We are not caching this because column number should be low enough
+        buttons.sort(key=lambda btn: btn.creation_counter)
+        return buttons
 
     def form_valid(self, transport, form):
         raise NotImplementedError("You should implement this method")
@@ -73,7 +125,7 @@ class FormBlock(blocks.Block):
         self.update(transport)
 
 
-class ModelFormBlock(FormBlock):
+class ModelForm(Form):
     """
     Wraps a Model Form, this class will automatically retrieve instance model
     from an id block attribute and process form_valid event (saving the object)
@@ -94,8 +146,8 @@ class ModelFormBlock(FormBlock):
 @register.action
 def send(transport, form, args=[], kwargs={}, data={}):
     """
-    Validate a form and call the proper callback FormBlock.form_valid
-    or FormBlock.form_invalid
+    Validate a form and call the proper callback Form.form_valid
+    or Form.form_invalid
 
     :param transport: Achilles transport object
     :param form: Form block name
