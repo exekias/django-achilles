@@ -1,5 +1,4 @@
 from django.utils.translation import ugettext as _
-from django.template import Context
 from six import add_metaclass
 
 from achilles import blocks
@@ -82,9 +81,9 @@ class Table(blocks.Block):
     #: ID field for non-model objects
     id_field = 'id'
 
-    def __init__(self, context=Context()):
-        context.update({'table': self})
+    def __init__(self, context=None):
         super(Table, self).__init__(context)
+        self.context.update({'table': self})
 
     def objects(self, *args, **kwargs):
         if self.model:
