@@ -18,31 +18,31 @@ class Button(object):
     """
     creation_counter = 0
 
-    def __init__(self, printable_name=None, type='submit',
+    def __init__(self, verbose_name=None, type='submit',
                  classes=''):
         """
-        :param printable_name: User visible name
+        :param verbose_name: User visible name
         :param type: Button type (submit, button, reset)
         :param classes: CSS classes to apply
         """
         Button.creation_counter += 1
         self.creation_counter = Button.creation_counter
-        self.printable_name = printable_name
+        self.verbose_name = verbose_name
         self.classes = classes
         self.type = type
 
     def render(self):
         return '<button type="%s" class="%s">%s</button>' % \
-               (self.type, self.classes, self.printable_name)
+               (self.type, self.classes, self.verbose_name)
 
 
 class SubmitButton(Button):
     """
     Form submit button
     """
-    def __init__(self, printable_name=None,
+    def __init__(self, verbose_name=None,
                  classes='btn btn-primary', **kwargs):
-        super(SubmitButton, self).__init__(printable_name, type='submit',
+        super(SubmitButton, self).__init__(verbose_name, type='submit',
                                            classes=classes, **kwargs)
 
 
@@ -50,9 +50,9 @@ class ResetButton(Button):
     """
     Form reset button
     """
-    def __init__(self, printable_name=None,
+    def __init__(self, verbose_name=None,
                  classes='btn btn-link', **kwargs):
-        super(ResetButton, self).__init__(printable_name, type='reset',
+        super(ResetButton, self).__init__(verbose_name, type='reset',
                                           classes=classes, **kwargs)
 
 
