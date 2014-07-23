@@ -114,9 +114,10 @@ class Form(blocks.Block):
         """
         buttons = []
         for b in dir(self):
-            b = getattr(self, b)
-            if isinstance(b, Button):
-                buttons.append(b)
+            if not b.startswith('_'):
+                b = getattr(self, b)
+                if isinstance(b, Button):
+                    buttons.append(b)
 
         # We are not caching this because column number should be low enough
         buttons.sort(key=lambda btn: btn.creation_counter)

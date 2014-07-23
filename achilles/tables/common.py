@@ -115,9 +115,10 @@ class Table(blocks.Block):
         """
         cols = []
         for c in dir(self):
-            c = getattr(self, c)
-            if isinstance(c, Column):
-                cols.append(c)
+            if not c.startswith('_'):
+                c = getattr(self, c)
+                if isinstance(c, Column):
+                    cols.append(c)
 
         # We are not caching this because column number should be low enough
         cols.sort(key=lambda col: col.creation_counter)

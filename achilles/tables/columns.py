@@ -77,8 +77,11 @@ class MergeColumn(Column):
     def contribute_to_class(self, table, name):
         super(MergeColumn, self).contribute_to_class(table, name)
 
-        for (name, column) in self.columns:
-            column.contribute_to_class(table, name)
+        # Register merged columsn under invisible namespace:
+        for (cname, column) in self.columns:
+            subname = '_' + name + '_' + cname
+            setattr(table, subname, column)
+            column.contribute_to_class(table, subname)
 
     def content(self, obj):
         return ' '.join([c.render(obj) for (n, c) in self.columns])
