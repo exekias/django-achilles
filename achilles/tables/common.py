@@ -51,16 +51,16 @@ class Cell(object):
 
 class TableMeta(type):
     """
-    Table metaclass, it calls contribute_to_class to column fields during
-    class creation
+    Table metaclass, it calls contribute_to_class to all fields containing
+    that method
     """
     def __new__(meta, name, bases, attrs):
         cls = super(TableMeta, meta).__new__(meta, name, bases, attrs)
 
-        for column_name, column in attrs.items():
-            if not isinstance(column, Column):
+        for field_name, field in attrs.items():
+            if not hasattr(field, 'contribute_to_class'):
                 continue
-            column.contribute_to_class(cls, column_name)
+            field.contribute_to_class(cls, field_name)
 
         return cls
 
