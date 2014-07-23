@@ -60,12 +60,13 @@ class TablesTests(TestCase):
         self.assertTrue("Kahlo" in out)
 
     def test_action_column(self):
-        column = tables.ActionColumn('foobar:action', verbose_name='doit!')
+        column = tables.ActionColumn(lambda x: 42, verbose_name='doit!')
         column.table = Mock(register_name='foobar:table', id_field='id')
+        column.name = 'foo'
 
         obj = Mock(id=2)
         column_text = ("<a class=\"\" href=\"javascript:achilles.action"
-                       "('tables:call_action', ['foobar:table', "
-                       "'foobar:action', '2'])\">doit!</a>")
+                       "('tables:row_action', ['foobar:table', "
+                       "'foo', '2'])\">doit!</a>")
 
         self.assertEqual(column.render(obj), column_text)

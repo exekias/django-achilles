@@ -111,26 +111,55 @@ class ActionColumn(ButtonColumn):
         super(ActionColumn, self).__init__(classes=classes, *args, **kwargs)
         self.action = action
 
+    def call(self, *args, **kwargs):
+        return self.action(*args, **kwargs)
+
     def get_href(self, obj):
         id_field = self.table.id_field
         return ("javascript:achilles.action("
-                "'tables:call_action', ['%s', '%s', '%s'])") % (
-            self.table.register_name, self.action, getattr(obj, id_field))
+                "'tables:row_action', ['%s', '%s', '%s'])") % (
+            self.table.register_name, self.name, getattr(obj, id_field))
 
 
 @register.action
-def call_action(transport, table, action, id):
+def table_action(transport, table_name, action_name, *args, **kwargs):
+    """
+    Call table action
+
+    :param transport: achilles transport
+    :param table_name: Name of the table calling this
+    :param action_name: Name of the action to call
+    """
+    # Get TableAction item
+    context = RequestContext(transport.request, {})
+    table = blocks.get(table_name, context)
+    action = getattr(table, action_name)
+
+    # Call the action
+    res = action.call(transport, table, *args, **kwargs)
+    blocks.update(transport, table.register_name)
+    return res
+
+
+@register.action
+def row_action(transport, table_name, action_name, row_id, *args, **kwargs):
     """
     Call table action on the given row
 
     :param transport: achilles transport
-    :param table: Name of the table calling this
-    :param action: Name of the action to call
-    :param id: Id of the object
+    :param table_name: Name of the table calling this
+    :param action_name: Name of the action to call
+    :param row_id: Id of the object
     """
+    # Get TableAction item
     context = RequestContext(transport.request, {})
-    table = blocks.get(table, context)
-    obj = table.get_object(id)
-    action = actions.get(action)
-    action(transport, table, obj)
+    table = blocks.get(table_name, context)
+    action = getattr(table, action_name)
+
+    # Get the object from the row
+    obj = table.get_object(row_id)
+
+    # Call the action
+    res = action.call(transport, table, obj, *args, **kwargs)
     blocks.update(transport, table.register_name)
+    return res

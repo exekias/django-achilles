@@ -4,6 +4,7 @@ from achilles import blocks, forms, tables
 from time import sleep
 
 from .models import Person
+from .actions import miau_person, delete_person
 
 register = blocks.Library('example')
 
@@ -36,9 +37,9 @@ class Table(tables.Table):
 
     first_name = tables.Column(verbose_name='First name')
     last_name = tables.Column(verbose_name='First name')
-    call_example = tables.ActionColumn(action='example:miau_person',
+    call_example = tables.ActionColumn(action=miau_person,
                                        verbose_name='Miauify')
-    call_example2 = tables.ActionColumn(action='example:delete_person',
+    call_example2 = tables.ActionColumn(action=delete_person,
                                         verbose_name='Delete')
 
     model = Person
@@ -52,8 +53,8 @@ class Form(forms.Form):
     form_class = MyForm
 
     # Buttons
-    reset = forms.ResetButton('Reset', type='reset')
-    send = forms.SubmitButton('Save', type='submit')
+    reset = forms.ResetButton('Reset')
+    send = forms.SubmitButton('Save')
 
     def form_valid(self, transport, form):
         Person.objects.get_or_create(**form.cleaned_data)
