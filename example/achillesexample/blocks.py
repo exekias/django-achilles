@@ -53,8 +53,8 @@ class Form(forms.Form):
     form_class = MyForm
 
     # Buttons
-    reset = forms.ResetButton('Reset')
-    send = forms.SubmitButton('Save')
+    reset = forms.ResetButton(verbose_name='Reset')
+    send = forms.SubmitButton(verbose_name='Save')
 
     def form_valid(self, transport, form):
         Person.objects.get_or_create(**form.cleaned_data)
