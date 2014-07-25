@@ -124,10 +124,10 @@ class Form(blocks.Block):
         buttons.sort(key=lambda btn: btn.creation_counter)
         return buttons
 
-    def form_valid(self, transport, form):
+    def form_valid(self, transport, form, *args, **kwargs):
         raise NotImplementedError("You should implement this method")
 
-    def form_invalid(self, transport, form):
+    def form_invalid(self, transport, form, *args, **kwargs):
         """
         Update the form with error messages
         """
@@ -148,7 +148,7 @@ class ModelForm(Form):
 
         return self.form_class(form_data, instance=instance)
 
-    def form_valid(self, transport, form):
+    def form_valid(self, transport, form, *args, **kwargs):
         form.save()
 
 
