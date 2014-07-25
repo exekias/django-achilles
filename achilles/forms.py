@@ -79,14 +79,15 @@ class Form(blocks.Block):
                 raise ValueError("form_class is undefined %s" %
                                  type(self).__name__)
             self._form = self.form_class(data=form_data,
-                                         **self.get_form_kwargs())
+                                         **self.get_form_kwargs(*args,
+                                                                **kwargs))
         return self._form
 
     def get_form_kwargs(self, *args, **kwargs):
+        instance = self.get_instance(*args, **kwargs)
         kwargs = {
             'initial': self.get_initial(),
         }
-        instance = self.get_instance(*args, **kwargs)
         if instance:
             kwargs['instance'] = instance
 
@@ -167,8 +168,8 @@ def send(transport, form, args=[], kwargs={}, data={}):
     form = block.get_form(data, *args, **kwargs)
 
     if form.is_valid():
-        block.form_valid(transport, form)
+        block.form_valid(transport, form, *args, **kwargs)
         return True
     else:
-        block.form_invalid(transport, form)
+        block.form_invalid(transport, form, *args, **kwargs)
         return False
