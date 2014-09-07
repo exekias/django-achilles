@@ -32,7 +32,7 @@ class Button(object):
         self.type = type
 
     def render(self):
-        return '<button type="%s" class="%s">%s</button>' % \
+        return u'<button type="%s" class="%s">%s</button>' % \
                (self.type, self.classes, self.verbose_name)
 
 
