@@ -16,7 +16,7 @@ class Row(object):
         """
         self.table = table
         self.obj = obj
-        self.id = getattr(obj, table.id_field)
+        self.id = table.get_object_id(obj)
 
     def cells(self):
         """
@@ -85,6 +85,15 @@ class Table(blocks.Block):
         super(Table, self).__init__(context)
         self.context.update({'table': self})
 
+    @classmethod
+    def get_object_id(cls, obj):
+        if cls.model:
+            id_field = cls.model._meta.pk.name
+        else:
+            id_field = cls.id_field
+
+        return getattr(obj, id_field)
+
     def objects(self, *args, **kwargs):
         if self.model:
             return self.model.objects.all()
@@ -97,7 +106,7 @@ class Table(blocks.Block):
         Return a table object from its unique object id
         """
         if self.model:
-            return self.model.objects.get(id=id)
+            return self.model.objects.get(pk=id)
         else:
             raise NotImplementedError('You should implement this method or '
                                       'define model field')

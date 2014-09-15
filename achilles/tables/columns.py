@@ -118,10 +118,9 @@ class ActionColumn(ButtonColumn):
         return self.action(*args, **kwargs)
 
     def get_href(self, obj):
-        id_field = self.table.id_field
         return ("javascript:achilles.action("
                 "'tables:row_action', ['%s', '%s', '%s'])") % (
-            self.table.register_name, self.name, getattr(obj, id_field))
+            self.table.register_name, self.name, self.table.get_object_id(obj))
 
 
 @register.action
