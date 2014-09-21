@@ -4,7 +4,7 @@ the use of some primitives it allows you to build asynchronous without the need
 of writting javascript to manage client side.
 """
 
-__version__ = (0, 0, 12)
+__version__ = (0, 0, 13)
 
 
 def get_version():

@@ -42,7 +42,5 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_nose',
     'achilles',
 )
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
